@@ -1,0 +1,7 @@
+*.xfit
+*highH/*
+*.xolotl
+*.data
+*.mat
+*.DS_Store
+*.sublime-workspace
