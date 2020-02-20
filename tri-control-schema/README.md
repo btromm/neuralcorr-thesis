@@ -8,11 +8,14 @@ within the constraints of xolotl.
 Parameters:
 
 * Membrane currents described using Hodgkin-Huxley formalism
+   * I_i = g_i x m^(p_i) x h^(q_i) x (V - E_i)
 * Currents used are based on Turrigiano et al., 1995
    * Fast Na+ -- I_Na
    * Delayed rectifier K+ -- I_Kd
    * Fast transient & slow Ca2+ -- I_CaT, I_CaS
    * Ca2+ dependent K+ -- I_KCa
-   * Fast transient K+ -- I_A 
+   * Fast transient K+ -- I_A
    * Hyperpolarization-activated inward cation -- I_H
    * Passive leakage -- I_L
+* Equilibrium points for three mean sensor values F, S, and D
+   * F = S = D = 0.1

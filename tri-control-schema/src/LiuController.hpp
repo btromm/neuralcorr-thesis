@@ -6,13 +6,13 @@
 // This controller can control either a synapse
 // or a conductance
 
-#ifndef FSDCONTROLLER
-#define FSDCONTROLLER
+#ifndef LIUCONTROLLER
+#define LIUCONTROLLER
 #include "mechanism.hpp"
 #include <limits>
 
 //inherit controller class spec
-class FSDController: public mechanism {
+class LiuController: public mechanism {
 
 protected:
     //FSD G Variables
@@ -35,7 +35,7 @@ public:
 
     // specify parameters + initial conditions for
     // mechanism that controls a conductance
-    FSDController(double A_, double B_, double C_, double tau_g_)
+    LiuController(double A_, double B_, double C_, double tau_g_)
     {
 
         A = A_;
@@ -45,8 +45,8 @@ public:
 
 
 
-        // if (tau_m<=0) {mexErrMsgTxt("[FSDController] tau_m must be > 0. Perhaps you meant to set it to Inf?\n");}
-        if (tau_g<=0) {mexErrMsgTxt("[FSDController] tau_g must be > 0. Perhaps you meant to set it to Inf?\n");}
+        // if (tau_m<=0) {mexErrMsgTxt("[LiuController] tau_m must be > 0. Perhaps you meant to set it to Inf?\n");}
+        if (tau_g<=0) {mexErrMsgTxt("[LiuController] tau_g must be > 0. Perhaps you meant to set it to Inf?\n");}
     }
 
 
@@ -65,12 +65,12 @@ public:
 
 };
 
-string FSDController::getClass() {
-    return "FSDController";
+string LiuController::getClass() {
+    return "LiuController";
 }
 
 //perhaps unimplemented
-double FSDController::getState(int idx)
+double LiuController::getState(int idx)
 {
     return 0;
     //if (idx == 1) {return m;}
@@ -79,10 +79,10 @@ double FSDController::getState(int idx)
 }
 
 // only thing we return is value of gbar
-int FSDController::getFullStateSize(){return 1; }
+int LiuController::getFullStateSize(){return 1; }
 
 
-int FSDController::getFullState(double *cont_state, int idx)
+int LiuController::getFullState(double *cont_state, int idx)
 {
   cont_state[idx] = channel->gbar;
   idx++;
@@ -90,7 +90,7 @@ int FSDController::getFullState(double *cont_state, int idx)
 }
 
 
-void FSDController::connect(conductance * channel_)
+void LiuController::connect(conductance * channel_)
 {
 
     // connect to a channel
@@ -110,25 +110,25 @@ void FSDController::connect(conductance * channel_)
 
 }
 
-void FSDController::connect(compartment* comp_)
+void LiuController::connect(compartment* comp_)
 {
-    mexErrMsgTxt("[FSDController] This mechanism cannot connect to a compartment object");
+    mexErrMsgTxt("[LiuController] This mechanism cannot connect to a compartment object");
 }
 
-void FSDController::connect(synapse* syn_)
+void LiuController::connect(synapse* syn_)
 {
-  mexErrMsgTxt("[FSDController] This mechanism cannot connect to a synapse object")
+  mexErrMsgTxt("[LiuController] This mechanism cannot connect to a synapse object")
 }
 
 
-void FSDController::integrate(void)
+void LiuController::integrate(void)
 {
 
 
     switch (control_type)
     {
         case 0:
-            mexErrMsgTxt("[FSDController] misconfigured controller. Make sure this object is contained by a conductance or synapse object");
+            mexErrMsgTxt("[LiuController] misconfigured controller. Make sure this object is contained by a conductance or synapse object");
             break;
 
 
@@ -194,7 +194,7 @@ void FSDController::integrate(void)
             }
 
         default:
-            mexErrMsgTxt("[FSDController] misconfigured controller");
+            mexErrMsgTxt("[LiuController] misconfigured controller");
             break;
 
     }
@@ -204,11 +204,11 @@ void FSDController::integrate(void)
 
 
 
-void FSDController::checkSolvers(int k) {
+void LiuController::checkSolvers(int k) {
     if (k == 0){
         return;
     } else {
-        mexErrMsgTxt("[FSDController] unsupported solver order\n");
+        mexErrMsgTxt("[LiuController] unsupported solver order\n");
     }
 }
 
