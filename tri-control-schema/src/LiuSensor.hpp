@@ -26,30 +26,31 @@ protected:
     double G_s = 3;
     double G_d = 1;
 
-    // inactivation variables
-    double tau_Hf = 1.5e-3;
-    double tau_Hs = 60e-3;
-    // no inactivation variable for D
-
-
 public:
     //iCa smoothed over different timescales
-    double iCa_f;
-    double iCa_s;
-    double iCa_d;
+    double iCa_f = 0;
+    double iCa_s = 0;
+    double iCa_d = 0;
 
-    double Mf;
-    double Ms;
-    double Md;
+    double Mbar_f = 0;
+    double Mbar_s = 0;
+    double Mbar_d = 0;
 
-    double Hf;
-    double Hs;
-    double Hd;
+    double Hbar_f = 0;
+    double Hbar_s = 0;
+
+    double Mf = 0;
+    double Ms = 0;
+    double Md = 0;
+
+    double Hf = 0;
+    double Hs = 0;
+    double Hd = 0;
 
 
     // specify parameters + initial conditions for
     // mechanism that controls a conductance
-    LiuSensor(double iCa_f_, double iCa_s_, double iCa_d_, double Mf_, double Ms_, double Md_, double Hf_, double Hs_)
+    LiuSensor(double iCa_f_, double iCa_s_, double iCa_d_, double Mf_, double Ms_, double Md_, double Hf_, double Hs_, double Mbar_f_, double Mbar_s_, double Mbar_d_, double Hbar_f_, double Hbar_s_)
     {
         iCa_f = iCa_f_;
         iCa_s = iCa_s_;
@@ -59,8 +60,13 @@ public:
         Md = Md_;
         Hf = Hf_;
         Hs = Hs_;
+        Mbar_f = Mbar_f_;
+        Mbar_s = Mbar_s_;
+        Mbar_d = Mbar_d_;
+        Hbar_f = Hbar_f_;
+        Hbar_s = Hbar_s_;
 
-        controlling_class = "unset";
+        controlling_class = "LiuSensor";
     }
 
 
@@ -109,6 +115,13 @@ void LiuSensor::connect(compartment* comp_)
 {
     comp = comp_;
     comp->addMechanism(this);
+
+    Mbar_f = 1.0/(1.0 + exp(14.2 + (comp->i_Ca_prev)*10));
+    Mbar_s = 1.0/(1.0 + exp(7.2 + (comp->i_Ca_prev)*10));
+    Mbar_d = 1.0/(1.0 + exp(3.0 + (comp->i_Ca_prev)*10));
+    Mf = Mbar_f;
+    Ms = Mbar_s;
+    Md = Mbar_d;
 }
 
 void LiuSensor::connect(synapse* syn_)
@@ -125,33 +138,37 @@ void LiuSensor::connect(conductance* cond_)
 void LiuSensor::integrate(void)
 {
     // calculate Mbar for each type
-    double Mbar_f = 1.0/(1.0 + exp(14.2 + (comp->i_Ca_prev)));
-    double Mbar_s = 1.0/(1.0 + exp(7.2 + (comp->i_Ca_prev)));
-    double Mbar_d = 1.0/(1.0 + exp(3.0 + (comp->i_Ca_prev)));
+    Mbar_f = 1.0/(1.0 + exp(14.2 + (comp->i_Ca_prev)*10));
+    Mbar_s = 1.0/(1.0 + exp(7.2 + (comp->i_Ca_prev)*10));
+    Mbar_d = 1.0/(1.0 + exp(3.0 + (comp->i_Ca_prev)*10));
 
     //calculate Hbar for each type
-    double Hbar_f = 1.0/(1.0 + exp(-9.8 - (comp->i_Ca_prev)));
-    double Hbar_s = 1.0/(1.0 + exp(-2.8 - (comp->i_Ca_prev)));
+    Hbar_f = 1.0/(1.0 + exp(-9.8 - (comp->i_Ca_prev)));
+    Hbar_s = 1.0/(1.0 + exp(-2.8 - (comp->i_Ca_prev)));
 
     //calculate dMx/dt for each type and dHx/dt for each type
-    double dMfdt = (Mbar_f - Mf)/0.5e-3;
-    double dMsdt = (Mbar_s - Ms)/50e-3;;
-    double dMddt = (Mbar_d - Md)/500e-3;
+    double dMfdt = (Mbar_f - Mf)/0.5;
+    double dMsdt = (Mbar_s - Ms)/50;;
+    double dMddt = (Mbar_d - Md)/500;
 
-    double dHfdt = (Hbar_f - Hf)/1.5e-3;
-    double dHsdt = (Hbar_s - Hs)/60e-3;
+    double dHfdt = (Hbar_f - Hf)/1.5;
+    double dHsdt = (Hbar_s - Hs)/60;
+
+    mexPrintf("dMfdt %f\n", dMfdt);
+    mexPrintf("Mf %f\n", Mf);
+    mexPrintf("Mbar_f %f\n",Mbar_f);
 
     //integrate Mx and Hx
-    Mf = Mf + dMfdt;
-    Ms = Ms + dMsdt;
-    Md = Md + dMddt;
-    Hf = Hf + dHfdt;
-    Hs = Hs + dHsdt;
+    Mf = Mf + dMfdt*dt;
+    Ms = Ms + dMsdt*dt;
+    Md = Md + dMddt*dt;
+    Hf = Hf + dHfdt*dt;
+    Hs = Hs + dHsdt*dt;
 
     //integrate FSD
-    iCa_f = 10.0*(pow(Mf,2.0))*Hf;
-    iCa_s = 3.0*(pow(Ms,2.0))*Hs;
-    iCa_d = 1.0*(pow(Md,2.0));
+    iCa_f = 10.0*Mf*Mf*Hf;
+    iCa_s = 3.0*Ms*Ms*Hs;
+    iCa_d = 1.0*Md*Md;
 }
 
 void LiuSensor::checkSolvers(int k)

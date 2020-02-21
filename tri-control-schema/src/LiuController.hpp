@@ -15,37 +15,38 @@
 class LiuController: public mechanism {
 
 protected:
-    //FSD G Variables
-    double Gf = 10;
-    double Gs = 3;
-    double Gd = 1;
-    double tau_Mx = 0;
-    double tau_Hx = 0;
 public:
     // timescales
-    double tau_g = 5000; //ms
+    double tau_g = 5e3; //ms
 
     //coupling parameters
     double A = 0;
     double B = 0;
     double C = 0;
 
+    //equilibrium values -- unique parameter model must be integrated continuously before applying controller to determine equilibrium values
+    double Fbar = 0;
+    double Sbar = 0;
+    double Dbar = 0;
+
     // area of the container this is in
     double container_A;
 
     // specify parameters + initial conditions for
     // mechanism that controls a conductance
-    LiuController(double A_, double B_, double C_, double tau_g_)
+    LiuController(double tau_g_, double A_, double B_, double C_, double Fbar_, double Sbar_, double Dbar_)
     {
 
         A = A_;
         B = B_;
         C = C_;
         tau_g = tau_g_;
+        Fbar = Fbar_;
+        Sbar = Sbar_;
+        Dbar = Dbar_;
 
 
 
-        // if (tau_m<=0) {mexErrMsgTxt("[LiuController] tau_m must be > 0. Perhaps you meant to set it to Inf?\n");}
         if (tau_g<=0) {mexErrMsgTxt("[LiuController] tau_g must be > 0. Perhaps you meant to set it to Inf?\n");}
     }
 
@@ -69,16 +70,12 @@ string LiuController::getClass() {
     return "LiuController";
 }
 
-//perhaps unimplemented
 double LiuController::getState(int idx)
 {
-    return 0;
-    //if (idx == 1) {return m;}
-    //else if (idx == 2) {return channel->gbar;}
-    //else {return std::numeric_limits<double>::quiet_NaN();}
+    if (idx == 1) {return channel->gbar;}
+    else {return std::numeric_limits<double>::quiet_NaN();}
 }
 
-// only thing we return is value of gbar
 int LiuController::getFullStateSize(){return 1; }
 
 
@@ -108,6 +105,8 @@ void LiuController::connect(conductance * channel_)
     // controller should be in.
     container_A  = (channel->container)->A;
 
+    mechanism* target = (channel->container)->getMechanismPointer("LiuSensor");
+
 }
 
 void LiuController::connect(compartment* comp_)
@@ -117,89 +116,20 @@ void LiuController::connect(compartment* comp_)
 
 void LiuController::connect(synapse* syn_)
 {
-  mexErrMsgTxt("[LiuController] This mechanism cannot connect to a synapse object")
+  mexErrMsgTxt("[LiuController] This mechanism cannot connect to a synapse object");
 }
 
 
 void LiuController::integrate(void)
 {
 
+  double deltag = ((A*(Fbar - target->iCa_f) + B*(Sbar - target->iCa_s) + C*(Dbar - target->iCa_d))*(channel->gbar)*container_A)*(dt/tau_g);
 
-    switch (control_type)
-    {
-        case 0:
-            mexErrMsgTxt("[LiuController] misconfigured controller. Make sure this object is contained by a conductance or synapse object");
-            break;
-
-
-        case 1:
-
-            {
-            // if the target is NaN, we will interpret this
-            // as the controller being disabled
-            // and do nothing
-            if (isnan((channel->container)->Ca_target)) {return;}
-
-            double Ca_error = (channel->container)->Ca_target - (channel->container)->Ca_prev;
-
-            // integrate mRNA
-            m += (dt/tau_m)*(Ca_error);
-
-            // mRNA levels below zero don't make any sense
-            if (m < 0) {m = 0;}
-
-            // copy the protein levels from this channel
-            double gdot = ((dt/tau_g)*(m - channel->gbar*container_A));
-
-            // make sure it doesn't go below zero
-            if (channel->gbar + gdot/container_A < 0) {
-                channel->gbar = 0;
-            } else {
-                channel->gbar += gdot/container_A;
-            }
-
-
-            break;
-
-            }
-        case 2:
-            {
-            // if the target is NaN, we will interpret this
-            // as the controller being disabled
-            // and do nothing
-
-            if (isnan((syn->post_syn)->Ca_target)) {return;}
-
-            double Ca_error = (syn->post_syn)->Ca_target - (syn->post_syn)->Ca_prev;
-
-            // integrate mRNA
-            m += (dt/tau_m)*(Ca_error);
-
-            // mRNA levels below zero don't make any sense
-            if (m < 0) {m = 0;}
-
-            // copy the protein levels from this syn
-            double gdot = ((dt/tau_g)*(m - syn->gmax*1e-3));
-
-            // make sure it doesn't go below zero
-            if (syn->gmax + gdot*1e3 < 0) {
-                syn->gmax = 0;
-            } else {
-                syn->gmax += gdot*1e3;
-            }
-
-
-            break;
-
-            }
-
-        default:
-            mexErrMsgTxt("[LiuController] misconfigured controller");
-            break;
-
-    }
-
-
+  if (channel->gbar_next + deltag < 0) {
+      channel->gbar_next = 0;
+  } else {
+      channel->gbar_next += deltag/container_A;
+  }
 }
 
 
