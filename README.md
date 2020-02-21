@@ -1,7 +1,7 @@
 # Broken Correlations: Bringing Biophysical Realism Back to Single-compartment Homeostatic Models
 ---
 `NEUR 99B: Senior Thesis`
-'Brandeis University, Fall 2019 - Spring 2020'
+`Brandeis University, Fall 2019 - Spring 2020`
 
 #### Author: Bobby Tromm :aquarius:
 
