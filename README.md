@@ -26,3 +26,6 @@
   * [Thesis Paper](https://docs.google.com/document/d/1XqZfbe7jtUovYCVZyRRGd8kOJfJg4Cv4iPpWA-V3vj0/edit?usp=sharing)
 * Reference:
   * [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+
+Notes to self:
+* Add Notion page for LaTeX wiki
