@@ -1,4 +1,4 @@
-# Broken Correlations: Bringing Biophysical Realism Back to Single-compartment Homeostatic Models
+# Replicating the Diversity of Correlations between Ion Channels in Neurons
 ---
 `NEUR 99B: Senior Thesis`   
 `Brandeis University, Fall 2019 - Spring 2020`
