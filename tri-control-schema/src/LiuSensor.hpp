@@ -154,10 +154,6 @@ void LiuSensor::integrate(void)
     double dHfdt = (Hbar_f - Hf)/1.5;
     double dHsdt = (Hbar_s - Hs)/60;
 
-    mexPrintf("dMfdt %f\n", dMfdt);
-    mexPrintf("Mf %f\n", Mf);
-    mexPrintf("Mbar_f %f\n",Mbar_f);
-
     //integrate Mx and Hx
     Mf = Mf + dMfdt*dt;
     Ms = Ms + dMsdt*dt;
