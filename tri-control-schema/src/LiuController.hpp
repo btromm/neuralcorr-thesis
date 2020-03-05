@@ -109,11 +109,6 @@ void LiuController::connect(conductance * channel_)
     // controller should be in.
     container_A  = (channel->container)->A;
 
-    target = (channel->container)->getMechanismPointer("LiuSensor");
-
-    mexPrintf("%f\n",container_A);
-    mexPrintf("%f\n",target->getState(2)); // this is iCa_d
-
 }
 
 void LiuController::connect(compartment* comp_)
@@ -129,14 +124,17 @@ void LiuController::connect(synapse* syn_)
 
 void LiuController::integrate(void) {
 
+  if(target)
+  {
+    target = (channel->container)->getMechanismPointer("LiuSensor");
+  }
   // you need to read out all the variables from the target using the
   // "getState" method, because that is declared in mechanism
   // clunky, but the only way to do it in C++ (I think)
-
+  mexPrintf("%f\n",target);
   double iCa_f = target->getState(0);
   double iCa_s = target->getState(1);
   double iCa_d = target->getState(2);
-
 
   double deltag = ((A*(Fbar - iCa_f) + B*(Sbar - iCa_s) + C*(Dbar - iCa_d))*(channel->gbar)*container_A)*(dt/tau_g);
 
@@ -147,6 +145,7 @@ void LiuController::integrate(void) {
   } else {
       channel->gbar += deltag;
   }
+
 }
 
 

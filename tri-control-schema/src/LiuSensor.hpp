@@ -104,9 +104,7 @@ double LiuSensor::getState(int idx) {
             return iCa_d;
             break;
 
-    }
-    return std::numeric_limits<double>::quiet_NaN();
-
+          }
 }
 
 
@@ -126,18 +124,10 @@ int LiuSensor::getFullState(double *cont_state, int idx)
     return idx;
 }
 
-// need to modify this
 void LiuSensor::connect(compartment* comp_)
 {
     comp = comp_;
     comp->addMechanism(this);
-
-    Mbar_f = 1.0/(1.0 + exp(14.2 + (comp->i_Ca_prev)*10));
-    Mbar_s = 1.0/(1.0 + exp(7.2 + (comp->i_Ca_prev)*10));
-    Mbar_d = 1.0/(1.0 + exp(3.0 + (comp->i_Ca_prev)*10));
-    Mf = Mbar_f;
-    Ms = Mbar_s;
-    Md = Mbar_d;
 }
 
 void LiuSensor::connect(synapse* syn_)
