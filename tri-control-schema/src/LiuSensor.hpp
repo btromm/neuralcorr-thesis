@@ -76,6 +76,7 @@ public:
     void connect(compartment*);
     void connect(conductance*);
     void connect(synapse*);
+    string getClass(void);
 
     int getFullStateSize(void);
     int getFullState(double * cont_state, int idx);
@@ -84,17 +85,32 @@ public:
 
 };
 
+string LiuSensor::getClass() {
+    return "LiuSensor";
+}
 
-double LiuSensor::getState(int idx)
-{
 
+double LiuSensor::getState(int idx) {
+
+    switch (idx) {
+
+        case 0:
+            return iCa_f;
+            break;
+        case 1:
+            return iCa_s;
+            break;
+        case 2:
+            return iCa_d;
+            break;
+
+    }
     return std::numeric_limits<double>::quiet_NaN();
 
 }
 
 
-int LiuSensor::getFullStateSize()
-{
+int LiuSensor::getFullStateSize() {
     return 3;
 }
 
