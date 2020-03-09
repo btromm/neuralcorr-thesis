@@ -131,7 +131,6 @@ void LiuController::integrate(void) {
   // you need to read out all the variables from the target using the
   // "getState" method, because that is declared in mechanism
   // clunky, but the only way to do it in C++ (I think)
-  mexPrintf("%f\n",target);
   double iCa_f = target->getState(0);
   double iCa_s = target->getState(1);
   double iCa_d = target->getState(2);
@@ -140,10 +139,10 @@ void LiuController::integrate(void) {
 
 
 
-  if (channel->gbar + deltag < 0) {
-      channel->gbar = 0;
+  if (channel->gbar_next + deltag < 0) {
+      channel->gbar_next = 0;
   } else {
-      channel->gbar += deltag;
+      channel->gbar_next += deltag / container_A;
   }
 
 }
