@@ -14,14 +14,18 @@
 class LiuController: public mechanism {
 
 protected:
+  //pointers to sensor
+  mechanism* Fast = 0;
+  mechanism* Slow = 0;
+  mechanism* DC = 0;
+
+  int sensor_connected = 0;
 
   // equilibrium values
   // in all cases, D = 0.1
   // combinations per Liu et al -- 0.25/0.09, 0.2/0.09, 0.06/0.09,
   // .15/.045, .2/.045, .06/.045
-  double Fbar = 0.25;
-  double Sbar = 0.09;
-  double Dbar = 0.1;
+
 
 public:
     // timescales
@@ -32,22 +36,30 @@ public:
     double B = 0;
     double C = 0;
 
-
-    mechanism* target;
-
-    // area of the container this is in
-    double container_A;
+    double Fbar = 0.25;
+    double Sbar = 0.09;
+    double Dbar = 0.1;
 
     // specify parameters + initial conditions for
     // mechanism that controls a conductance
-    LiuController(double A_, double B_, double C_, double tau_g_)
+    LiuController(double A_, double B_, double C_, double tau_g_, double Fbar_, double Sbar_, double Dbar_)
     {
 
         A = A_;
         B = B_;
         C = C_;
 
+        Fbar = Fbar_;
+        Sbar = Sbar_;
+        Dbar = Dbar_;
+
+        if(isnan(Fbar)) {Fbar = 0.25;}
+        if(isnan(Sbar)) {Sbar = 0.09;}
+        if(isnan(Dbar)) {Dbar = 0.1;}
+
         tau_g = tau_g_;
+
+        if(isnan(tau_g)) {tau_g = 5000;} //ms
 
 
 

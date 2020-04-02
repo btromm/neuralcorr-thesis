@@ -59,6 +59,7 @@ public:
     void connect(compartment*);
     void connect(conductance*);
     void connect(synapse*);
+    double boltzmann(double);
     string getClass(void);
 
     int getFullStateSize(void);
