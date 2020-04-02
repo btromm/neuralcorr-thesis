@@ -36,9 +36,9 @@ public:
     double B = 0;
     double C = 0;
 
-    double Fbar = 0.25;
-    double Sbar = 0.09;
-    double Dbar = 0.1;
+    double Fbar = 0;
+    double Sbar = 0;
+    double Dbar = 0;
 
     // specify parameters + initial conditions for
     // mechanism that controls a conductance
@@ -79,35 +79,51 @@ public:
     int getFullState(double * cont_state, int idx);
     double getState(int);
     string getClass(void);
+    void connectToLiuSensor(void);
 
 };
+
+void LiuController::connectToLiuSensor() {
+  int n_mech = (channel->container)->n_mech;
+
+  for(int i = 0; i < n_mech; i++) {
+    string this_mech = (channel->container)->getMechanismPointer(i)->getClass().c_str();
+
+    if(this_mech == "FastLiuSensor") {
+      Fast = (channel->container)->getMechanismPointer(i);
+      sensor_connected++;
+    }
+    if(this_mech == "SlowLiuSensor") {
+      Slow = (channel->container)->getMechanismPointer(i);
+      sensor_connected++;
+    }
+    if(this_mech == "DCLiuSensor") {
+      DC = (channel->container)->getMechanismPointer(i);
+      sensor_connected++;
+    }
+  }
+}
 
 string LiuController::getClass() {
     return "LiuController";
 }
 
-double LiuController::getState(int idx)
-{
-    if (idx == 1) {return channel->gbar;}
-    else {return std::numeric_limits<double>::quiet_NaN();}
-}
+double LiuController::getState(int idx) {return 0;}
 
-int LiuController::getFullStateSize(){return 1; }
+int LiuController::getFullStateSize() {return 0;}
 
 
 int LiuController::getFullState(double *cont_state, int idx)
 {
-  cont_state[idx] = channel->gbar;
-  idx++;
   return idx;
 }
 
 
-void LiuController::connect(conductance * channel_)
+void LiuController::connect(conductance * cond_)
 {
 
     // connect to a channel
-    channel = channel_;
+    channel = cond_;
 
 
     // make sure the compartment that we are in knows about us
@@ -136,29 +152,29 @@ void LiuController::connect(synapse* syn_)
 
 void LiuController::integrate(void) {
 
-  if(target)
-  {
-    target = (channel->container)->getMechanismPointer("LiuSensor");
+  switch(sensor_connected){
+    case 0:
+      connectToLiuSensor();
+      break;
+    default:
+      break;
   }
   // you need to read out all the variables from the target using the
   // "getState" method, because that is declared in mechanism
   // clunky, but the only way to do it in C++ (I think)
-  double iCa_f = target->getState(0);
-  double iCa_s = target->getState(1);
-  double iCa_d = target->getState(2);
+  double iCa_f = Fast->getState(0);
+  double iCa_s = Slow->getState(0);
+  double iCa_d = DC->getState(0);
 
-  double deltag = ((A*(Fbar - iCa_f) + B*(Sbar - iCa_s) + C*(Dbar - iCa_d))*(channel->gbar)*container_A)*(dt/tau_g);
+  double deltag = ((A*(Fbar - iCa_f) + B*(Sbar - iCa_s) + C*(Dbar - iCa_d))*(channel->gbar)*(dt/tau_g);
 
 
 
-  if (channel->gbar_next + deltag < 0) {
-      channel->gbar_next = 0;
-  } else {
-      channel->gbar_next += deltag / container_A;
+  if ((channel->gbar + deltag) > 0) {
+    channel->gbar += deltag;
   }
 
 }
-
 
 
 void LiuController::checkSolvers(int k) {
