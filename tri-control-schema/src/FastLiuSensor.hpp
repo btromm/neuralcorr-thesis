@@ -28,8 +28,8 @@ protected:
 
 public:
     double X;
-    double M_inf = 0;
-    double H_inf = 1;
+    double m = 0;
+    double h = 1;
 
     // parameters for FastLiuSensor
     double ZM;
@@ -75,7 +75,7 @@ public:
     int getFullState(double * cont_state, int idx);
     double getState(int);
     void checkSolvers(int);
-
+};
 
     string FastLiuSensor::getClass() {
         return "FastLiuSensor";
@@ -119,11 +119,11 @@ public:
         Hbar = boltzmann(-ZH - i_Ca);
 
         //calculate dMx/dt and dHx/dt
-        M_inf = Mbar + (M_inf - Mbar)*exp(-dt/tau_m);
-        H_inf = Hbar + (H_inf - Hbar)*exp(-dt/tau_h);
+        m = Mbar + (m - Mbar)*exp(-dt/tau_m);
+        h = Hbar + (h - Hbar)*exp(-dt/tau_h);
 
         //integrate F
-        X = G*M_inf*M_inf*H_inf;
+        X = G*m*m*h;
     }
     double FastLiuSensor::boltzmann(double x) {
       return 1/(1 + exp(x));
@@ -137,4 +137,5 @@ public:
         }
     }
 
-}
+
+#endif

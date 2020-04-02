@@ -66,7 +66,7 @@ public:
     int getFullState(double * cont_state, int idx);
     double getState(int);
     void checkSolvers(int);
-
+};
 
     string DCLiuSensor::getClass() {
         return "DCLiuSensor";
@@ -127,3 +127,5 @@ public:
     }
 
 }
+
+#endif

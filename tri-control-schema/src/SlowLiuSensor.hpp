@@ -76,7 +76,7 @@ public:
     double getState(int);
     void checkSolvers(int);
 
-
+};
     string SlowLiuSensor::getClass() {
         return "SlowLiuSensor";
     }
@@ -138,3 +138,5 @@ public:
     }
 
 }
+
+#endif
