@@ -28,8 +28,8 @@ protected:
 
 public:
     double X;
-    double M = 0;
-    double H = 1;
+    double m = 0;
+    double h = 1;
 
     // parameters for SlowLiuSensor
     double ZM;
@@ -119,11 +119,11 @@ public:
         Hbar = boltzmann(-ZH - i_Ca);
 
         //calculate dMx/dt and dHx/dt
-        M = Mbar + (M - Mbar)*exp(-dt/tau_m);
-        H = Hbar + (H - Hbar)*exp(-dt/tau_h);
+        m = Mbar + (m - Mbar)*exp(-dt/tau_m);
+        h = Hbar + (h - Hbar)*exp(-dt/tau_h);
 
         //integrate S
-        X = G*M*M*H;
+        X = G*m*m*h;
     }
     double SlowLiuSensor::boltzmann(double x) {
       return 1/(1 + exp(x));
@@ -136,7 +136,5 @@ public:
             mexErrMsgTxt("[SlowLiuSensor] unsupported solver order\n");
         }
     }
-
-}
 
 #endif

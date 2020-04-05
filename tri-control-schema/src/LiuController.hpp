@@ -21,11 +21,6 @@ protected:
 
   int sensor_connected = 0;
 
-  // equilibrium values
-  // in all cases, D = 0.1
-  // combinations per Liu et al -- 0.25/0.09, 0.2/0.09, 0.06/0.09,
-  // .15/.045, .2/.045, .06/.045
-
 
 public:
     // timescales
@@ -53,6 +48,10 @@ public:
         Sbar = Sbar_;
         Dbar = Dbar_;
 
+        // equilibrium values
+        // in all cases, D = 0.1
+        // combinations per Liu et al -- 0.25/0.09, 0.2/0.09, 0.06/0.09,
+        // .15/.045, .2/.045, .06/.045
         if(isnan(Fbar)) {Fbar = 0.25;}
         if(isnan(Sbar)) {Sbar = 0.09;}
         if(isnan(Dbar)) {Dbar = 0.1;}
@@ -131,7 +130,7 @@ void LiuController::connect(conductance * cond_)
 
 
 
-    controlling_class = (channel_->getClass()).c_str();
+    controlling_class = (channel->getClass()).c_str();
 
     // attempt to read the area of the container that this
     // controller should be in.
@@ -159,14 +158,12 @@ void LiuController::integrate(void) {
     default:
       break;
   }
-  // you need to read out all the variables from the target using the
-  // "getState" method, because that is declared in mechanism
-  // clunky, but the only way to do it in C++ (I think)
+
   double iCa_f = Fast->getState(0);
   double iCa_s = Slow->getState(0);
   double iCa_d = DC->getState(0);
 
-  double deltag = ((A*(Fbar - iCa_f) + B*(Sbar - iCa_s) + C*(Dbar - iCa_d))*(channel->gbar)*(dt/tau_g);
+  double deltag = ((A*(Fbar - iCa_f) + B*(Sbar - iCa_s) + C*(Dbar - iCa_d)))*(dt/tau_g)*(channel->gbar);
 
 
 

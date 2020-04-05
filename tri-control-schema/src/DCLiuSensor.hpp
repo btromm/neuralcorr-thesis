@@ -27,7 +27,7 @@ protected:
 
 public:
     double X;
-    double M = 0;
+    double m = 0;
 
     // parameters for DCLiuSensor
     double ZM;
@@ -49,7 +49,6 @@ public:
         if (isnan(X)) {X = 0;}
         if (isnan(m)) {m = 0;}
 
-        controlling_class = "DCLiuSensor";
     }
 
 
@@ -109,10 +108,10 @@ public:
         Mbar = boltzmann(ZM + i_Ca);
 
         //calculate dMx/dt and dHx/dt
-        M = Mbar + (M - Mbar)*exp(-dt/tau_m);
+        m = Mbar + (m - Mbar)*exp(-dt/tau_m);
 
         //integrate S
-        X = G*M*M;
+        X = G*m*m;
     }
     double DCLiuSensor::boltzmann(double x) {
       return 1/(1 + exp(x));
@@ -126,6 +125,5 @@ public:
         }
     }
 
-}
 
 #endif
