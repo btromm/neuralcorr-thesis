@@ -48,13 +48,6 @@ public:
         Sbar = Sbar_;
         Dbar = Dbar_;
 
-        // equilibrium values
-        // in all cases, D = 0.1
-        // combinations per Liu et al -- 0.25/0.09, 0.2/0.09, 0.06/0.09,
-        // .15/.045, .2/.045, .06/.045
-        if(isnan(Fbar)) {Fbar = 0.25;}
-        if(isnan(Sbar)) {Sbar = 0.09;}
-        if(isnan(Dbar)) {Dbar = 0.1;}
 
         tau_g = tau_g_;
 
