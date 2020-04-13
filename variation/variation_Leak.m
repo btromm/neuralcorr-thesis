@@ -7,11 +7,11 @@ clc;
 T_measure = 6e3;
 T_grow = 20e3;
 g0 = 1e-1+1e-1*rand(8,1);
-numSim = 10;
+numSim = 5;
 initial_condition_noise = .01;
 
-leak_gbar = [0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5 0.55 0.6 0.65 0.7 0.75 0.8 0.85 0.9 0.95 1];
-gbars = zeros(8,numSim,20);
+leak_gbar = linspace(0.05, 1, 20);
+gbars = zeros(8,numSim,length(leak_gbar));
 
 % for each leak gbar
 for i = 1:length(leak_gbar)
@@ -92,6 +92,7 @@ for i = 1:length(leak_gbar)
     gbars(:,j,i) = x.get('*gbar');
   end
 end
+%data cleanup and plot
 gbars_avg = mean(gbars,2);
 
 rm_this = gbars_avg(:,1,:) > 2000;
@@ -100,6 +101,6 @@ gbars_avg(rm_this,:) = NaN;
 gbars_avg(7,:,:) = []; % get rid of Leak
 S = size(gbars_avg);
 gbars_reduced = reshape(gbars_avg,S(1)*S(2),S(3));
-
+channels(7) = [];
 variations.plot(gbars_reduced, channels, leak_gbar);
 savefig('gbarvar');
