@@ -36,7 +36,7 @@ end
 
 figlib.pretty('PlotLineWidth',1)
 %}
-for i = 1:length(channels);
+for i = 1:N
 
 set(gca,'XScale','linear','YScale','log');
 figlib.pretty('PlotLineWidth',1);
