@@ -101,5 +101,5 @@ gbars_avg(7,:,:) = []; % get rid of Leak
 S = size(gbars_avg);
 gbars_reduced = reshape(gbars_avg,S(1)*S(2),S(3));
 
-%variations.plot(gbars_reduced, channels, leak_gbar);
-%savefig('gbarvar');
+variations.plot(gbars_reduced, channels, leak_gbar);
+savefig('gbarvar');
