@@ -5,6 +5,10 @@
 The purpose of the present experiment is to recapitulate Liu's model
 within the constraints of xolotl.
 
+Model successfully built and configured.
+Sadly, it is near impossible to attain in a working state.
+Mechanisms of variability is the next step, using this formalism with IntegralControllers, rather than FSD controllers.
+
 Parameters:
 
 * Membrane currents described using Hodgkin-Huxley formalism

@@ -1,4 +1,4 @@
-% Figure 1 -- Variation in g vs. g_leak
+% Figure 2 -- Variation in g vs. g_leak
 clear all;
 clc;
 

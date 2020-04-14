@@ -1,4 +1,4 @@
-% Figure 6 -- Variation in IntegralController translation timescale
+% Figure 7 -- Variation in IntegralController translation timescale
 
 clear all;
 

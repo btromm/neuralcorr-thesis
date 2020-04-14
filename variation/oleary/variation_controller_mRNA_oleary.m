@@ -1,4 +1,4 @@
-% Figure 7 -- Variation in IntegralController initial mRNA concentration
+% Figure 8 -- Variation in IntegralController initial mRNA concentration
 
 clear all;
 

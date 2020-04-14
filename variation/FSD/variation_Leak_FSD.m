@@ -1,14 +1,14 @@
-% Figure 5 -- Variation in mRNA initial concentrations
-
+% Figure 10 -- Variation in g vs. g_leak, FSD formalism
+% incomplete
 clear all;
+clc;
 
 % global parameters
 
-T_measure = 6e3;
-T_grow = 20e3;
-numSim = 500;
-Leak_gbar = 0.2;
+T_measure = 20e3;
+T_grow = 1e6;
 g0 = 1e-1+1e-1*rand(8,1);
+numSim = 500;
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
@@ -50,10 +50,7 @@ parfor i = 1:numSim
   x.set('t_end',T_grow);
   x.set('*gbar',g0); %same initial conditions every time
   x.set('*Controller.m',0); %always start m from zero
-  x.set('AB.Leak.gbar',Leak_gbar);
-  for c = 1:length(channels)
-    x.set(strcat('AB.',string(channels{i}),'.m'),(1e-2*rand(1)+1e-3));)
-  end
+  x.set('AB.Leak.gbar',0.25*rand(1));
   x.integrate;
 
   % check that it has converged, and that the bursts are OK

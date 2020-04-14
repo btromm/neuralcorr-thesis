@@ -1,4 +1,4 @@
-% Figure 3 -- Variation in Ca_target
+% Figure 4 -- Variation in Ca_target
 
 clear all;
 

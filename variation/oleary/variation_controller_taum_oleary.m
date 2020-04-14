@@ -1,4 +1,4 @@
-% Figure 5 -- Variation in IntegralController transcription timescale
+% Figure 6 -- Variation in IntegralController transcription timescale
 
 clear all;
 

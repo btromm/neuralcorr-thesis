@@ -1,4 +1,4 @@
-% Figure 2 -- Variation in initial conditions
+% Figure 3 -- Variation in initial conditions
 
 clear all;
 
