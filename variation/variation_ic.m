@@ -6,7 +6,6 @@ clear all;
 
 T_measure = 6e3;
 T_grow = 20e3;
-g0 = 1e-1+1e-1*rand(8,1);
 numSim = 500;
 initial_condition_noise = .01;
 
