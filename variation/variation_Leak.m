@@ -5,9 +5,9 @@ clc;
 % global parameters
 
 T_measure = 20e3;
-T_grow = 50e5;
+T_grow = 1e6;
 g0 = 1e-1+1e-1*rand(8,1);
-numSim = 50;
+numSim = 500;
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
@@ -29,12 +29,10 @@ metrics0 = xtools.V2metrics(data.AB.V,'sampling_rate',10);
 channels = x.AB.find('conductance');
 leak_cell = {'Leak'};
 for c = 1:length(channels)
-  if(~ismember(channels{i},leak_cell)) {x.AB.(channels{c}).add('oleary/IntegralController');}
-end
-
-% configure controllers
-for c = 1:length(channels)
+  if ~ismember(channels{c},leak_cell)
+    x.AB.(channels{c}).add('oleary/IntegralController');
     x.AB.(channels{c}).IntegralController.tau_m = 5e6/x.AB.(channels{c}).gbar;
+  end
 end
 
 % set Ca target
@@ -46,16 +44,12 @@ x.t_end = T_grow;
 x.sim_dt = .1;
 
 gbars = NaN(8,numSim);
-
 parfor i = 1:numSim
   disp(i)
-
-
   x.set('t_end',T_grow);
   x.set('*gbar',g0); %same initial conditions every time
   x.set('*Controller.m',0); %always start m from zero
-  x.set('AB.Leak.gbar',rand(1));
-
+  x.set('AB.Leak.gbar',0.25*rand(1));
   x.integrate;
 
   % check that it has converged, and that the bursts are OK
@@ -83,6 +77,5 @@ parfor i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-
-variations.plot(gbars_reduced, channels, leak_gbar);
+%variations.plot(gbars_reduced, channels, leak_gbar);
 %savefig('gbarvar');
