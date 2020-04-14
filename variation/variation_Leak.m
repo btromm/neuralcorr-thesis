@@ -1,26 +1,25 @@
 % Figure 1 -- Variation in g vs. g_leak
-
+clear all;
 clc;
 
 % global parameters
 
-T_measure = 6e3;
-T_grow = 20e3;
+T_measure = 20e3;
+T_grow = 50e5;
 g0 = 1e-1+1e-1*rand(8,1);
 numSim = 5;
-initial_condition_noise = .01;
+%initial_condition_noise = .01;
+%target_noise = 0.3;
 
-leak_gbar = linspace(0.05, 1, 20);
+leak_gbar = linspace(0.1, 1, 40);
 gbars = zeros(8,numSim,length(leak_gbar));
 
 % for each leak gbar
-for i = 1:length(leak_gbar)
-
-  clear x;
+for i = 1:length(leak_gbar);
 
   % initialize model
   x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
-  x.AB.Leak.gbar = leak_gbar(i);
+  x.AB.Leak.gbar = leak_gbar(i); %perhaps shouldn't set it here as the model already "works" and may break if maximal conductances are manually changed without subsequent manipulation of other gbars
 
   % measure baseline stats
   x.t_end = T_measure;
@@ -53,17 +52,18 @@ for i = 1:length(leak_gbar)
   % set Ca target
   x.AB.Ca_target = Ca_target;
 
-  x.t_end = T_grow;
   x.dt = 0.1;
   x.output_type = 0;
-  x.t_end = 1e6;
+  x.t_end = T_grow;
   x.sim_dt = .1;
 
-  for j = 1:numSim
+  parfor j = 1:numSim
     disp(j)
-    x.set('*gbar',initial_condition_noise*rand(8,1));
-    x.set('*Controller.m',initial_condition_noise*rand(length(x.get('*Controller.m')*0+1),1));
-    x.t_end = T_grow;
+    x.set('t_end',T_grow);
+    x.set('*gbar',g0); %same initial conditions every time
+    x.set('*Controller.m',0); %always start m from zero
+    x.set('AB.Leak.gbar',leak_gbar(i));
+
     x.integrate;
 
     % check that it has converged, and that the bursts are OK
@@ -93,14 +93,10 @@ for i = 1:length(leak_gbar)
   end
 end
 %data cleanup and plot
-gbars_avg = mean(gbars,2);
 
-rm_this = gbars_avg(:,1,:) > 2000;
-gbars_avg(rm_this,:) = NaN;
+rm_this = gbars(:,1,:) > 2000;
+gbars(rm_this,:) = NaN;
 
-gbars_avg(7,:,:) = []; % get rid of Leak
-S = size(gbars_avg);
-gbars_reduced = reshape(gbars_avg,S(1)*S(2),S(3));
-channels(7) = [];
-variations.plot(gbars_reduced, channels, leak_gbar);
-savefig('gbarvar');
+channels(7) = []
+%variations.plot(gbars_reduced, channels, leak_gbar);
+%savefig('gbarvar');
