@@ -7,6 +7,7 @@ clear all;
 T_measure = 6e3;
 T_grow = 20e3;
 numSim = 500;
+Leak_gbar = 0.2
 initial_condition_noise = .01;
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
@@ -49,6 +50,7 @@ parfor i = 1:numSim
   x.set('t_end',T_grow);
   x.set('*gbar',initial_condition_noise*rand(8,1)); %same initial conditions every time
   x.set('*Controller.m',0); %always start m from zero
+  x.set('AB.Leak.gbar',Leak_gbar);
   x.integrate;
 
   % check that it has converged, and that the bursts are OK
