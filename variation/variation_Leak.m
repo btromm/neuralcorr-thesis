@@ -13,14 +13,14 @@ numSim = 5;
 
 leak_gbar = linspace(0.1, 1, 40);
 gbars = zeros(8,numSim,length(leak_gbar));
+x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
 % for each leak gbar
 for i = 1:length(leak_gbar);
 
   % initialize model
-  x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
-  x.AB.Leak.gbar = leak_gbar(i); %perhaps shouldn't set it here as the model already "works" and may break if maximal conductances are manually changed without subsequent manipulation of other gbars
 
+  x.AB.Leak.gbar = leak_gbar(i);
   % measure baseline stats
   x.t_end = T_measure;
   x.dt = .1;
