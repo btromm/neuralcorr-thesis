@@ -1,4 +1,4 @@
-% Figure 2 -- Variation in initial conditions
+% Figure 6 -- Variation in IntegralController translation timescale
 
 clear all;
 
@@ -26,14 +26,14 @@ x.output_type = 1;
 data = x.integrate;
 metrics0 = xtools.V2metrics(data.AB.V,'sampling_rate',10);
 
-tau_m0 = zeros(length(channels));
+tau_g0 = zeros(length(channels));
 % add controllers
 channels = x.AB.find('conductance');
 leak_cell = {'Leak'};
 for c = 1:length(channels)
   if ~ismember(channels{c},leak_cell)
     x.AB.(channels{c}).add('oleary/IntegralController');
-    tau_m0(c) = 5e6/x.AB.(channels{c}).gbar;
+    tau_g0(c) = 5e3;
   end
 end
 
@@ -54,7 +54,7 @@ parfor i = 1:numSim
   x.set('*Controller.m',0);
   for c = 1:length(channels)
     if ~ismember(channels{c},leak_cell)
-      x.set(strcat('AB.',string(channels{c}),'.tau_m'),tau_m0(c)+1e4*rand(1));
+      x.set(strcat('AB.',string(channels{c}),'.tau_g'),tau_g0(c)+100*rand(1));
     end
   end
   x.integrate;
