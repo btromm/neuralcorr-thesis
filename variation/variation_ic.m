@@ -8,7 +8,7 @@ T_measure = 6e3;
 T_grow = 20e3;
 numSim = 500;
 Leak_gbar = 0.2
-initial_condition_noise = .01;
+initial_condition_noise = .05;
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
