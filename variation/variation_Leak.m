@@ -37,8 +37,9 @@ for i = 1:length(leak_gbar);
 
   % add controllers
   channels = x.AB.find('conductance');
+  leak_cell = {'Leak'};
   for c = 1:length(channels)
-    x.AB.(channels{c}).add('oleary/IntegralController');
+    if(~ismember(channels{i},leak_cell)) {x.AB.(channels{c}).add('oleary/IntegralController');}
   end
 
   % configure controllers
@@ -93,9 +94,6 @@ for i = 1:length(leak_gbar);
   end
 end
 %data cleanup and plot
-
-rm_this = gbars(:,1,:) > 2000;
-gbars(rm_this,:) = NaN;
 
 channels(7) = []
 %variations.plot(gbars_reduced, channels, leak_gbar);
