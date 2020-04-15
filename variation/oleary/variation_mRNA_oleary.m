@@ -5,9 +5,9 @@ clear all;
 % global parameters
 
 T_measure = 6e3;
-T_grow = 1e6;
-numSim = 500;
-Leak_gbar = 0.2;
+T_grow = 200e3;
+numSim = 50;
+Leak_gbar = 0.05;
 g0 = 1e-1+1e-1*rand(8,1);
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
@@ -45,6 +45,7 @@ x.t_end = T_grow;
 x.sim_dt = .1;
 
 gbars = NaN(8,numSim);
+mRNA = 1e-2.*rand(8,numSim)+1e-3;
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
@@ -52,7 +53,9 @@ parfor i = 1:numSim
   x.set('*Controller.m',0); %always start m from zero
   x.set('AB.Leak.gbar',Leak_gbar);
   for c = 1:length(channels)
-    x.set(strcat('AB.',string(channels{i}),'.m'),(1e-2*rand(1)+1e-3));)
+    if(~ismember(channels{c},leak_cell))
+      x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
+    end
   end
   x.integrate;
 
@@ -81,5 +84,5 @@ parfor i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-%variations.plot(gbars_reduced, channels, leak_gbar);
+variations.IC_plot(gbars,channels,mRNA,'mRNA');
 %savefig('gbarvar');

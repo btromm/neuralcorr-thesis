@@ -7,7 +7,7 @@ clc;
 T_measure = 20e3;
 T_grow = 1e6;
 g0 = 1e-1+1e-1*rand(8,1);
-numSim = 500;
+numSim = 50;
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
@@ -77,5 +77,5 @@ parfor i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-%variations.plot(gbars_reduced, channels, leak_gbar);
+variations.plot(gbars, channels);
 %savefig('gbarvar');

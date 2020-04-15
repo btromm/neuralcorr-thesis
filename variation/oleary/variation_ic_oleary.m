@@ -5,9 +5,9 @@ clear all;
 % global parameters
 
 T_measure = 6e3;
-T_grow = 1e6;
-numSim = 500;
-Leak_gbar = 0.2;
+T_grow = 400e3;
+numSim = 50;
+Leak_gbar = 0.05;
 initial_condition_noise = .05;
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
@@ -45,12 +45,14 @@ x.t_end = T_grow;
 x.sim_dt = .1;
 
 gbars = NaN(8,numSim);
+IC = initial_condition_noise.*rand(length(channels),numSim);
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
-  x.set('*gbar',initial_condition_noise*rand(8,1)); %same initial conditions every time
+  x.set('*gbar',IC(8,i)); %same initial conditions every time
   x.set('*Controller.m',0); %always start m from zero
   x.set('AB.Leak.gbar',Leak_gbar);
+  disp(x.get('AB.Leak.gbar'));
   x.integrate;
 
   % check that it has converged, and that the bursts are OK
@@ -78,5 +80,5 @@ parfor i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-%variations.plot(gbars_reduced, channels, leak_gbar);
+variations.IC_plot(gbars,channels,IC,'Maximal g');
 %savefig('gbarvar');

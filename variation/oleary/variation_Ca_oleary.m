@@ -5,11 +5,11 @@ clear all;
 % global parameters
 
 T_measure = 6e3;
-T_grow = 1e6;
-numSim = 500;
-Leak_gbar = 0.2;
-g0 = 1e-1+1e-1*rand(8,1) %set once and fuhget about it
-Ca_target_noise = 0.3;
+T_grow = 200e3;
+numSim = 50;
+Leak_gbar = 0.05;
+g0 = 1e-1+1e-1*rand(8,1); %set once and fuhget about it
+Ca_target_noise = 2;
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
@@ -41,16 +41,15 @@ x.dt = 0.1;
 x.output_type = 0;
 x.t_end = T_grow;
 x.sim_dt = .1;
-
+Ca_target = (ones(numSim,1)*Ca_target0)+(1+randn(numSim,1).*Ca_target_noise);
 gbars = NaN(8,numSim);
 parfor i = 1:numSim
   disp(i)
-  Ca_target = Ca_target0+(1+randn*Ca_target_noise); %random Ca target (randn allows for + or -)
   x.set('t_end',T_grow);
   x.set('*gbar',g0); %same initial conditions every time
   x.set('*Controller.m',0); %always start m from zero
   x.set('AB.Leak.gbar',Leak_gbar);
-  x.set('AB.Ca_target',Ca_target)
+  x.set('AB.Ca_target',Ca_target(i))
   x.integrate;
 
   % check that it has converged, and that the bursts are OK
@@ -78,3 +77,5 @@ parfor i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
+
+variations.Ca_plot(gbars,channels,Ca_target,'Calcium Target');

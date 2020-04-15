@@ -5,9 +5,9 @@ clear all;
 % global parameters
 
 T_measure = 6e3;
-T_grow = 1e6;
-numSim = 500;
-Leak_gbar = 0.2;
+T_grow = 200e3;
+numSim = 50;
+Leak_gbar = 0.025;
 g0 = 1e-1+1e-1*rand(8,1);
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
@@ -26,13 +26,14 @@ x.output_type = 1;
 data = x.integrate;
 metrics0 = xtools.V2metrics(data.AB.V,'sampling_rate',10);
 
-tau_g0 = zeros(length(channels));
 % add controllers
 channels = x.AB.find('conductance');
+tau_g0 = zeros(length(channels),1);
 leak_cell = {'Leak'};
 for c = 1:length(channels)
   if ~ismember(channels{c},leak_cell)
     x.AB.(channels{c}).add('oleary/IntegralController');
+    x.AB.(channels{c}).IntegralController.tau_m = 5e6/x.AB.(channels{c}).gbar;
     tau_g0(c) = 5e3;
   end
 end
@@ -44,7 +45,7 @@ x.dt = 0.1;
 x.output_type = 0;
 x.t_end = T_grow;
 x.sim_dt = .1;
-
+tau_gs = abs((repmat(tau_g0,1,numSim))+((repmat(tau_g0,1,numSim)).*(1e-2.*randn(length(channels),numSim))));
 gbars = NaN(8,numSim);
 parfor i = 1:numSim
   disp(i)
@@ -54,7 +55,7 @@ parfor i = 1:numSim
   x.set('*Controller.m',0);
   for c = 1:length(channels)
     if ~ismember(channels{c},leak_cell)
-      x.set(strcat('AB.',string(channels{c}),'.tau_g'),tau_g0(c)+100*rand(1));
+      x.set(strcat('AB.',string(channels{c}),'.IntegralController.tau_g'),tau_gs(c,i));
     end
   end
   x.integrate;
@@ -84,5 +85,5 @@ parfor i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-%variations.plot(gbars_reduced, channels, leak_gbar);
+variations.IC_plot(gbars,channels,tau_gs,'tau_g');
 %savefig('gbarvar');
