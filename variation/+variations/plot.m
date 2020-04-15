@@ -1,5 +1,5 @@
 
-function ph = plot(gbars, channels)
+function ph = plot(gbars, channels, title)
 
 % plot all the gs to show correlations
 figure('outerposition',[300 300 1003 1001],'PaperUnits','points','PaperSize',[1003 1001]); hold on
@@ -20,7 +20,9 @@ for i = 1:N-1
 	end
 		xlabel('Leak');
 end
-sgtitle('Variation in channels vs. variation in Leak')
+figlib.pretty('PlotLineWidth',1)
+plot_title = strcat('Variation in channels vs. variation in ',title);
+sgtitle(plot_title)
 
 hold off;
 figure('outerposition',[300 300 1003 1001],'PaperUnits','points','PaperSize',[1003 1001]); hold on
@@ -51,5 +53,5 @@ for i = 1:N-1
 
 	end
 end
-
+sgtitle('Correlations between maximal conductances')
 figlib.pretty('PlotLineWidth',1)
