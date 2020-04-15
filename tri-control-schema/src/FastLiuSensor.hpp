@@ -16,12 +16,9 @@
 #include "mechanism.hpp"
 #include <limits>
 
-//inherit mechanism class spec
 class FastLiuSensor: public mechanism {
 
 protected:
-
-    // scalar
     double Mbar;
     double Hbar;
     double i_Ca;
@@ -122,7 +119,7 @@ public:
         m = Mbar + (m - Mbar)*exp(-dt/tau_m);
         h = Hbar + (h - Hbar)*exp(-dt/tau_h);
 
-        //integrate F
+        //integrate X
         X = G*m*m*h;
     }
     double FastLiuSensor::boltzmann(double x) {

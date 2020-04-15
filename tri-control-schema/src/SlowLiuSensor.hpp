@@ -16,12 +16,9 @@
 #include "mechanism.hpp"
 #include <limits>
 
-//inherit mechanism class spec
 class SlowLiuSensor: public mechanism {
 
 protected:
-
-    // scalar
     double Mbar;
     double Hbar;
     double i_Ca;

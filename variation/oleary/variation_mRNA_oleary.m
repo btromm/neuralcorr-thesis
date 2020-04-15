@@ -1,11 +1,11 @@
 % Figure 5 -- Variation in mRNA initial concentrations
-
+clc;
 clear all;
 
 % global parameters
 
 T_measure = 6e3;
-T_grow = 20e3;
+T_grow = 1e6;
 numSim = 500;
 Leak_gbar = 0.2;
 g0 = 1e-1+1e-1*rand(8,1);
