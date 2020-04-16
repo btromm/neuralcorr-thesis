@@ -10,7 +10,7 @@ numSim = 50;
 Leak_gbar = 0.05;
 initial_condition_noise = .05;
 
-[x,metrics0] = initialize(T_grow,T_measure);
+[x,metrics0] = initialize(T_grow,T_measure,1);
 
 gbars = NaN(8,numSim);
 IC = initial_condition_noise.*rand(length(channels),numSim);

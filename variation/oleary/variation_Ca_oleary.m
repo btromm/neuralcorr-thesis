@@ -11,7 +11,7 @@ Leak_gbar = 0.05;
 g0 = 1e-1+1e-1*rand(8,1); %set once and fuhget about it
 Ca_target_noise = 2;
 
-[x,metrics0,Ca_target0] = initialize(T_grow,T_measure);
+[x,metrics0,Ca_target0,tau_ms,tau_gs] = initialize(T_grow,T_measure,1);
 
 Ca_target = (ones(numSim,1)*Ca_target0)+(1+randn(numSim,1).*Ca_target_noise);
 gbars = NaN(8,numSim);

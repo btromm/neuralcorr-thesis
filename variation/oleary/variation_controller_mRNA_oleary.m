@@ -10,7 +10,7 @@ numSim = 500;
 Leak_gbar = 0.05;
 g0 = 1e-1+1e-1*rand(8,1);
 
-[x,metrics0] = initialize(T_grow,T_measure);
+[x,metrics0] = initialize(T_grow,T_measure,1);
 
 mRNA = 1e-2.*rand(7,numSim)+1e-3;
 gbars = NaN(8,numSim);

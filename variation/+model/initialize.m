@@ -1,4 +1,4 @@
-function [x,metrics0,Ca_target0] = initialize(T_grow,T_measure)
+function [x,metrics0,Ca_target0,tau_ms,tau_gs] = initialize(T_grow,T_measure,type)
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
@@ -17,14 +17,43 @@ data = x.integrate;
 metrics0 = xtools.V2metrics(data.AB.V,'sampling_rate',10);
 
 % add controllers
-channels = x.AB.find('conductance');
-leak_cell = {'Leak'};
-for c = 1:length(channels)
-  if ~ismember(channels{c},leak_cell)
-    x.AB.(channels{c}).add('oleary/IntegralController');
-    x.AB.(channels{c}).IntegralController.tau_m = 5e6/x.AB.(channels{c}).gbar;
-  end
-end
+switch type
+  case 1:
+    channels = x.AB.find('conductance');
+    leak_cell = {'Leak'};
+    for c = 1:length(channels)
+      if ~ismember(channels{c},leak_cell)
+        x.AB.(channels{c}).add('oleary/IntegralController');
+        x.AB.(channels{c}).IntegralController.tau_m = 5e6/x.AB.(channels{c}).gbar;
+      end
+    end
+    tau_ms = [];
+    tau_gs = [];
+  case 2:
+    channels = x.AB.find('conductance');
+    tau_g0 = zeros(length(channels),1);
+    leak_cell = {'Leak'};
+    for c = 1:length(channels)
+      if ~ismember(channels{c},leak_cell)
+        x.AB.(channels{c}).add('oleary/IntegralController');
+        x.AB.(channels{c}).IntegralController.tau_m = 5e6/x.AB.(channels{c}).gbar;
+        tau_g0(c) = 5e3;
+      end
+    end
+    tau_gs = abs((repmat(tau_g0,1,numSim))+((repmat(tau_g0,1,numSim)).*(1e-2.*randn(length(channels),numSim))));
+    tau_ms = [];
+  case 3:
+    channels = x.AB.find('conductance');
+    tau_m0 = zeros(length(channels),1);
+    leak_cell = {'Leak'};
+    for c = 1:length(channels)
+      if ~ismember(channels{c},leak_cell)
+        x.AB.(channels{c}).add('oleary/IntegralController');
+        tau_m0(c) = 5e6/x.AB.(channels{c}).gbar;
+      end
+    end
+    tau_ms = abs((repmat(tau_m0,1,numSim))+((repmat(tau_m0,1,numSim)).*(1e-2.*randn(length(channels),numSim))));
+    tau_gs = [];
 
 % set Ca target
 x.AB.Ca_target = Ca_target0;
