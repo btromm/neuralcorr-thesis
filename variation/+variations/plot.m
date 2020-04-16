@@ -1,5 +1,5 @@
 
-function ph = plot(gbars, channels, title)
+function ph = plot(gbars, channels)
 
 % plot all the gs to show correlations
 figure('outerposition',[300 300 1003 1001],'PaperUnits','points','PaperSize',[1003 1001]); hold on
@@ -21,7 +21,7 @@ for i = 1:N-1
 		xlabel('Leak');
 end
 figlib.pretty('PlotLineWidth',1)
-plot_title = strcat('Variation in channels vs. variation in ',title);
+plot_title = strcat('Variation in channel gbars vs. variation in Leak gbar');
 sgtitle(plot_title)
 
 hold off;

@@ -4,7 +4,7 @@ clear all;
 clc;
 
 %% set global parameters
-T_measure = 6e3;
+T_measure = 200e3;
 T_grow = 1e6;
 numSim = 500;
 initial_condition_noise = 0.01;
@@ -49,10 +49,12 @@ for c = 1:length(channels)
   end
 end
 
-x.t_end = 5e3;
-data = x.integrate;
-
-data.AB.ACurrent % doesn't show a "struct" for Integral Controller
+x.t_end = 200e3;
+ x.sim_dt = .1;
+  tic;
+   x.integrate;
+    t = toc;
+     x.t_end/t/1e3
 
 %% do the simulations!
 

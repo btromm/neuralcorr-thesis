@@ -17,7 +17,7 @@ for i = 1:N-1
 		scatter(IC(i,:),gbars(i,:));
   	ylabel(channels{i});
 	end
-  x_cat = strcat(title, ' Initial conditions');
+  x_cat = strcat(channels{i},' ',title);
 	xlabel(x_cat);
 end
 figlib.pretty('PlotLineWidth',1)
