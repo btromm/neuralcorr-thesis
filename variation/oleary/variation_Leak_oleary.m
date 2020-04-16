@@ -9,7 +9,7 @@ T_grow = 1e6;
 g0 = 1e-1+1e-1*rand(8,1);
 numSim = 100;
 
-[x,metrics0] = model.initialize(T_grow,T_measure,1);
+[x,metrics0,channels] = model.initialize(T_grow,T_measure,1);
 
 gbars = NaN(8,numSim);
 parfor i = 1:numSim

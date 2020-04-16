@@ -1,4 +1,4 @@
-function [x,metrics0,Ca_target0,tau_ms,tau_gs] = initialize(T_grow,T_measure,type)
+function [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = initialize(T_grow,T_measure,type)
 
 x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
