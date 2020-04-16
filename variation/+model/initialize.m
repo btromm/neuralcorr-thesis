@@ -18,7 +18,7 @@ metrics0 = xtools.V2metrics(data.AB.V,'sampling_rate',10);
 
 % add controllers
 switch type
-  case 1:
+  case 1
     channels = x.AB.find('conductance');
     leak_cell = {'Leak'};
     for c = 1:length(channels)
@@ -29,7 +29,7 @@ switch type
     end
     tau_ms = [];
     tau_gs = [];
-  case 2:
+  case 2
     channels = x.AB.find('conductance');
     tau_g0 = zeros(length(channels),1);
     leak_cell = {'Leak'};
@@ -42,7 +42,7 @@ switch type
     end
     tau_gs = abs((repmat(tau_g0,1,numSim))+((repmat(tau_g0,1,numSim)).*(1e-2.*randn(length(channels),numSim))));
     tau_ms = [];
-  case 3:
+  case 3
     channels = x.AB.find('conductance');
     tau_m0 = zeros(length(channels),1);
     leak_cell = {'Leak'};
@@ -54,6 +54,7 @@ switch type
     end
     tau_ms = abs((repmat(tau_m0,1,numSim))+((repmat(tau_m0,1,numSim)).*(1e-2.*randn(length(channels),numSim))));
     tau_gs = [];
+end
 
 % set Ca target
 x.AB.Ca_target = Ca_target0;
