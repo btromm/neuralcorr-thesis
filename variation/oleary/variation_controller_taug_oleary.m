@@ -24,32 +24,20 @@ parfor i = 1:numSim
       x.set(strcat('AB.',string(channels{c}),'.IntegralController.tau_g'),tau_gs(c,i));
     end
   end
+
   x.integrate;
 
-  % check that it has converged, and that the bursts are OK
-  if abs(x.AB.Ca_target - x.AB.Ca_average)/x.AB.Ca_target > .1
-    disp('Model did not converge')
-    continue
-  end
-
-  % measure metrics
+  Ca_s(1,i) = x.get('*Ca_average');
+  Ca_s(2,i) = x.get('*Ca_target');
   x.set('t_end',T_measure);
   [V,Ca] = x.integrate;
-
-
-  metrics = xtools.V2metrics(V,'sampling_rate',10);
-
-  if (metrics0.burst_period - metrics.burst_period)/metrics0.burst_period > .2
-    disp('Burst periods not OK')
-    continue
-  end
-
-  if (metrics0.duty_cycle_mean - metrics.duty_cycle_mean)/metrics0.duty_cycle_mean > .1
-    disp('Duty cycle not OK')
-    continue
-  end
+  metrics_V(:,i) = V;
 
   gbars(:,i) = x.get('*gbar');
 end
-variations.IC_plot(gbars,channels,tau_gs,'tau_g');
+save('gbars_controller_taug','gbars');
+
+[g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
+
+%variations.IC_plot(gbars,channels,tau_gs,'tau_g');
 %savefig('gbarvar');

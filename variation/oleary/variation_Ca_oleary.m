@@ -30,6 +30,7 @@ for i = 1:numSim
   x.set('*Controller.m',0); %always start m from zero
   x.set('AB.Leak.gbar',Leak_gbar);
   x.set('AB.Ca_target',Ca_target(i))
+  
   x.integrate;
 
   Ca_s(1,i) = x.get('*Ca_average');
@@ -40,6 +41,7 @@ for i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
+save('gbars_Ca','gbars');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
 
