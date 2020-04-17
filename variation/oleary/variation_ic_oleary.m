@@ -17,7 +17,7 @@ IC = initial_condition_noise.*rand(length(channels),numSim);
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
-  x.set('*gbar',IC(8,i)); %same initial conditions every time
+  x.set('*gbar',IC(8,i));
   x.set('*Controller.m',0); %always start m from zero
   x.set('AB.Leak.gbar',Leak_gbar);
   disp(x.get('AB.Leak.gbar'));
