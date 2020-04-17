@@ -1,4 +1,4 @@
-% Figure 3 -- Variation in initial conditions
+% Figure 3 -- Variation in initial conditions (gbars and mRNA)
 
 clear all;
 
@@ -14,13 +14,18 @@ initial_condition_noise = .05;
 
 gbars = NaN(8,numSim);
 IC = initial_condition_noise.*rand(length(channels),numSim);
+mRNA = 1e-2.*rand(8,numSim)+1e-3;
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
-  x.set('*gbar',IC(8,i));
+  x.set('*gbar',IC(:,i));
+  for c = 1:length(channels)
+    if(~ismember(channels{c},leak_cell))
+      x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
+    end
+  end
   x.set('*Controller.m',0); %always start m from zero
   x.set('AB.Leak.gbar',Leak_gbar);
-  disp(x.get('AB.Leak.gbar'));
   x.integrate;
 
   % check that it has converged, and that the bursts are OK
