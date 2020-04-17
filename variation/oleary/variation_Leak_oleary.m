@@ -33,5 +33,5 @@ save('gbars_Leak','gbars');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
 
-variations.plot(gbars, channels);
+%variations.plot(gbars, channels);
 %savefig('gbarvar');
