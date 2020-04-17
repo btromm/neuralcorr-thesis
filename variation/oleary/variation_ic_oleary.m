@@ -1,6 +1,7 @@
 % Figure 3 -- Variation in initial conditions (gbars and mRNA)
 
 clear all;
+clc;
 
 % global parameters
 
@@ -9,6 +10,7 @@ T_grow = 400e3;
 numSim = 50;
 Leak_gbar = 0.05;
 initial_condition_noise = .05;
+leak_cell = {'Leak'};
 
 [x,metrics0,channels] = model.initialize(T_grow,T_measure,1);
 
@@ -18,7 +20,7 @@ gbars = NaN(8,numSim);
 metrics_V = NaN((T_measure/x.dt),numSim);
 Ca_s = NaN(2,numSim);
 
-parfor i = 1:numSim
+for i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
   x.set('*gbar',IC(:,i));
@@ -44,6 +46,6 @@ save('gbars_IC','gbars');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
 
-variations.CV_plot(IC,gbars,channels)
-%variations.IC_plot(gbars,channels,IC,' initial gbar');
+variations.CV_plot(IC,g_proper);
+variations.corr_plot(IC,g_proper,channels);
 %savefig('gbarvar');

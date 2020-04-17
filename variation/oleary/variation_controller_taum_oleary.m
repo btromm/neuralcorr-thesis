@@ -1,6 +1,7 @@
 % Figure 6 -- Variation in IntegralController transcription timescale
 
 clear all;
+clc;
 
 % global parameters
 
