@@ -6,16 +6,24 @@ clear all;
 
 T_measure = 6e3;
 T_grow = 200e3;
-numSim = 50;
 Leak_gbar = 0.05;
 g0 = 1e-1+1e-1*rand(8,1); %set once and fuhget about it
-Ca_target_noise = 2;
+Ca_target_noise = 30;
+numSim = 10;
 
 [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = model.initialize(T_grow,T_measure,1);
 
 Ca_target = (ones(numSim,1)*Ca_target0)+(1+randn(numSim,1).*Ca_target_noise);
+%Ca_target_min = 10;
+%Ca_target_max = 200;
+%Ca_target = repelem(linspace(Ca_target_min,Ca_target_max,Ca_target_max/5),20); %run 20 sims of each target
+%numSim = length(Ca_target);
+
 gbars = NaN(8,numSim);
-parfor i = 1:numSim
+metrics_V = NaN((T_measure/x.dt),numSim);
+Ca_s = NaN(2,numSim);
+
+for i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
   x.set('*gbar',g0); %same initial conditions every time
@@ -24,30 +32,16 @@ parfor i = 1:numSim
   x.set('AB.Ca_target',Ca_target(i))
   x.integrate;
 
-  % check that it has converged, and that the bursts are OK
-  if abs(x.AB.Ca_target - x.AB.Ca_average)/x.AB.Ca_target > .1
-    disp('Model did not converge')
-    continue
-  end
-
-  % measure metrics
+  Ca_s(1,i) = x.get('*Ca_average');
+  Ca_s(2,i) = x.get('*Ca_target');
   x.set('t_end',T_measure);
   [V,Ca] = x.integrate;
-
-
-  metrics = xtools.V2metrics(V,'sampling_rate',10);
-
-  if (metrics0.burst_period - metrics.burst_period)/metrics0.burst_period > .2
-    disp('Burst periods not OK')
-    continue
-  end
-
-  if (metrics0.duty_cycle_mean - metrics.duty_cycle_mean)/metrics0.duty_cycle_mean > .1
-    disp('Duty cycle not OK')
-    continue
-  end
+  metrics_V(:,i) = V;
 
   gbars(:,i) = x.get('*gbar');
 end
 
-variations.Ca_plot(gbars,channels,Ca_target,'Calcium Target');
+[g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
+
+%variations.Ca_plot(gbars_noleak,channels,Ca_target,'Calcium Target');
+%variations.corr_plot(gbars_noleak,channels);
