@@ -13,6 +13,9 @@ g0 = 1e-1+1e-1*rand(8,1);
 [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = model.initialize(T_grow,T_measure,2);
 
 gbars = NaN(8,numSim);
+metrics_V = NaN((T_measure/x.dt),numSim);
+Ca_s = NaN(2,numSim);
+
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);

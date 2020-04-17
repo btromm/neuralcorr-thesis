@@ -14,6 +14,9 @@ g0 = 1e-1+1e-1*rand(8,1);
 
 mRNA = 1e-2.*rand(7,numSim)+1e-3;
 gbars = NaN(8,numSim);
+metrics_V = NaN((T_measure/x.dt),numSim);
+Ca_s = NaN(2,numSim);
+
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);

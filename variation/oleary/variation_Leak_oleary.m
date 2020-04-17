@@ -12,6 +12,8 @@ numSim = 100;
 [x,metrics0,channels] = model.initialize(T_grow,T_measure,1);
 
 gbars = NaN(8,numSim);
+IC = initial_condition_noise.*rand(length(channels),numSim);
+
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);

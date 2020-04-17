@@ -12,9 +12,12 @@ initial_condition_noise = .05;
 
 [x,metrics0,channels] = model.initialize(T_grow,T_measure,1);
 
-gbars = NaN(8,numSim);
-IC = initial_condition_noise.*rand(length(channels),numSim);
 mRNA = 1e-2.*rand(8,numSim)+1e-3;
+IC = initial_condition_noise.*rand(length(channels),numSim);
+gbars = NaN(8,numSim);
+metrics_V = NaN((T_measure/x.dt),numSim);
+Ca_s = NaN(2,numSim);
+
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
@@ -41,5 +44,6 @@ save('gbars_IC','gbars');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
 
+variations.CV_plot(IC,gbars,channels)
 %variations.IC_plot(gbars,channels,IC,' initial gbar');
 %savefig('gbarvar');
