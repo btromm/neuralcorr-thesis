@@ -4,8 +4,8 @@ clc;
 
 % global parameters
 
-T_measure = 20e3;
-T_grow = 1e6;
+T_measure = 6e3;
+T_grow = 200e3;
 numSim = 250;
 initial_condition_noise = 0.01;
 leak_cell = {'Leak'};

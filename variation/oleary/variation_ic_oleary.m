@@ -6,10 +6,10 @@ clc;
 % global parameters
 
 T_measure = 6e3;
-T_grow = 400e3;
+T_grow = 200e3;
 numSim = 250;
 Leak_gbar = 0.05;
-initial_condition_noise = .05;
+initial_condition_noise = .2;
 leak_cell = {'Leak'};
 
 [x,metrics0,channels] = model.initialize(T_grow,T_measure,1,numSim);
