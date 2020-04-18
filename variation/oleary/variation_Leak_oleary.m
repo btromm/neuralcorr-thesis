@@ -27,7 +27,7 @@ for i = 1:numSim
     end
   end
   x.set('*Controller.m',0); %always start m from zero
-  x.set('AB.Leak.gbar',0.25*rand(1));
+  x.set('AB.Leak.gbar',0.5*rand(1));
 
   x.integrate;
 
