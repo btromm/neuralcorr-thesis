@@ -48,6 +48,7 @@ for i = 1:numSim
   gbars(:,i) = x.get('*gbar');
 end
 save('gbars_controller_taum','gbars');
+save('IC_controller_taum','IC');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
 
