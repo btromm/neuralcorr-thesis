@@ -12,7 +12,7 @@ Leak_gbar = 0.05;
 initial_condition_noise = .05;
 leak_cell = {'Leak'};
 
-[x,metrics0,channels] = model.initialize(T_grow,T_measure,1);
+[x,metrics0,channels] = model.initialize(T_grow,T_measure,1,numSim);
 
 mRNA = 1e-2.*rand(8,numSim)+1e-3;
 IC = initial_condition_noise.*rand(length(channels),numSim);
@@ -43,6 +43,7 @@ for i = 1:numSim
   gbars(:,i) = x.get('*gbar');
 end
 save('gbars_IC','gbars');
+save('IC_IC','IC');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
 
