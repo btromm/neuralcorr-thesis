@@ -50,6 +50,6 @@ save('IC_IC','IC');
 save('gbars_IC_proper','g_proper');
 save('gbars_IC_other','g_other');
 
-variations.CV_plot(IC,g_proper);
-variations.corr_plot(IC,g_proper,channels);
+%variations.CV_plot(IC,g_proper);
+%variations.corr_plot(IC,g_proper,channels);
 %savefig('gbarvar');

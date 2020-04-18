@@ -15,7 +15,9 @@ leak_cell = {'Leak'};
 gbars = NaN(8,numSim);
 mRNA = 1e-2.*rand(8,numSim)+1e-3;
 IC = initial_condition_noise.*rand(length(channels),numSim);
+metrics_V = NaN((T_measure/x.dt),numSim);
 Ca_s = NaN(2,numSim);
+
 
 for i = 1:numSim
   disp(i)
