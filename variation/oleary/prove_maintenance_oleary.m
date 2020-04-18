@@ -20,13 +20,14 @@ gbars = NaN(8,numSim);
 mRNA = 1e-2.*rand(8,numSim)+1e-3;
 IC = initial_condition_noise.*rand(length(channels),numSim);
 metrics_V = NaN((T_measure/x.dt),numSim);
-Ca_s = NaN(2,numSim);
+Ca_avg = NaN(1,numSim);
+Ca_tgt = NaN(1,numSim);
 
 hasbeenplotted = 0;
 
 [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = model.initialize();
 
-for i = 1:numSim
+parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
   x.set('*gbar',IC(:,i));
@@ -40,8 +41,8 @@ for i = 1:numSim
 
   x.integrate;
 
-  Ca_s(1,i) = x.get('*Ca_average');
-  Ca_s(2,i) = x.get('*Ca_target');
+  Ca_avg(i) = x.get('*Ca_average');
+  Ca_tgt(i) = x.get('*Ca_target');
   x.set('t_end',T_measure);
   [V,Ca] = x.integrate;
   metrics_V(:,i) = V;
@@ -50,7 +51,7 @@ for i = 1:numSim
 
   % plot trace if metrics are ok
   if (hasbeenplotted == 0)
-    model_ok = metric_check(gbars(:,i),metrics_V(:,i),Ca_s(:,i))
+    model_ok = metric_check(gbars(:,i),metrics_V(:,i),Ca_avg(i),Ca_tgt(i))
     if model_ok = 1
       hasbeenplotted = 1;
       trace_plot
@@ -58,7 +59,7 @@ for i = 1:numSim
   end
 end
 
-[g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
+[g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_avg,Ca_tgt,numSim);
 
 save('gbars_prove','gbars');
 save('gbars_prove_proper','g_proper');
