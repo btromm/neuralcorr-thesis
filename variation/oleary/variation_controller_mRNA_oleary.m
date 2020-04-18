@@ -1,6 +1,7 @@
 % Figure 8 -- Variation in IntegralController initial mRNA concentration
 
 clear all;
+clc;
 
 % global parameters
 

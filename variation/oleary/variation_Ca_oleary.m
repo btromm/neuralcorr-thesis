@@ -1,6 +1,7 @@
 % Figure 4 -- Variation in Ca_target
 
 clear all;
+clc;
 
 % global parameters
 
