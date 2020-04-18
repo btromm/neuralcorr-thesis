@@ -14,11 +14,8 @@ leak_cell = {'Leak'};
 
 [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = model.initialize(T_grow,T_measure,1,numSim);
 
-Ca_target = (ones(numSim,1)*Ca_target0)+(1+randn(numSim,1).*Ca_target_noise);
-%Ca_target_min = 10;
-%Ca_target_max = 200;
-%Ca_target = repelem(linspace(Ca_target_min,Ca_target_max,Ca_target_max/5),20); %run 20 sims of each target
-%numSim = length(Ca_target);
+%Ca_target = (ones(numSim,1)*Ca_target0)+(1+randn(numSim,1).*Ca_target_noise);
+Ca_target = linspace(10,200,numSim);
 
 gbars = NaN(8,numSim);
 mRNA = 1e-2.*rand(8,numSim)+1e-3;
