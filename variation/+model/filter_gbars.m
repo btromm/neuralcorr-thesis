@@ -1,11 +1,11 @@
-function [g_proper,g_other] = filter_gbars(gbars,metrics_V,metrics0,Ca,numSim)
+function [g_proper,g_other] = filter_gbars(gbars,metrics_V,metrics0,Ca_avg,Ca_tgt,numSim)
 
 g_proper = NaN(size(gbars));
 g_other = NaN(size(gbars));
 
 for i = 1:numSim
   % check that it has converged, and that the bursts are OK
-  if abs(Ca(2,i) - Ca(1,i))/Ca(2,i) > .1
+  if abs(Ca_tgt(i) - Ca_avg(i))/Ca_tgt(i) > .1
     disp(i)
     disp('Model did not converge')
     g_other(:,i) = gbars(:,i);
