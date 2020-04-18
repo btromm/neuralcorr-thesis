@@ -7,7 +7,7 @@ clc;
 
 T_measure = 6e3;
 T_grow = 400e3;
-numSim = 50;
+numSim = 250;
 Leak_gbar = 0.05;
 initial_condition_noise = .05;
 leak_cell = {'Leak'};

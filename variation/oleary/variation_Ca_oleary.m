@@ -7,9 +7,9 @@ clear all;
 T_measure = 6e3;
 T_grow = 200e3;
 Leak_gbar = 0.05;
-g0 = 1e-1+1e-1*rand(8,1); %set once and fuhget about it
 Ca_target_noise = 30;
-numSim = 10;
+initial_condition_noise = 0.01;
+numSim = 250;
 
 [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = model.initialize(T_grow,T_measure,1);
 
@@ -20,17 +20,24 @@ Ca_target = (ones(numSim,1)*Ca_target0)+(1+randn(numSim,1).*Ca_target_noise);
 %numSim = length(Ca_target);
 
 gbars = NaN(8,numSim);
+mRNA = 1e-2.*rand(8,numSim)+1e-3;
+IC = initial_condition_noise.*rand(length(channels),numSim);
 metrics_V = NaN((T_measure/x.dt),numSim);
 Ca_s = NaN(2,numSim);
 
 for i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
-  x.set('*gbar',g0); %same initial conditions every time
+  x.set('*gbar',IC);
+  for c = 1:length(channels)
+    if(~ismember(channels{c},leak_cell))
+      x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
+    end
+  end
   x.set('*Controller.m',0); %always start m from zero
   x.set('AB.Leak.gbar',Leak_gbar);
   x.set('AB.Ca_target',Ca_target(i))
-  
+
   x.integrate;
 
   Ca_s(1,i) = x.get('*Ca_average');

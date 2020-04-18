@@ -7,20 +7,26 @@ clc;
 
 T_measure = 6e3;
 T_grow = 200e3;
-numSim = 50;
+numSim = 250;
 Leak_gbar = 0.025;
-g0 = 1e-1+1e-1*rand(8,1);
 
 [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = model.initialize(T_grow,T_measure,3);
 
 gbars = NaN(8,numSim);
+mRNA = 1e-2.*rand(8,numSim)+1e-3;
+IC = initial_condition_noise.*rand(length(channels),numSim);
 metrics_V = NaN((T_measure/x.dt),numSim);
 Ca_s = NaN(2,numSim);
 
-parfor i = 1:numSim
+for i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
-  x.set('*gbar',g0); %same initial conditions every time
+  x.set('*gbar',IC);
+  for c = 1:length(channels)
+    if(~ismember(channels{c},leak_cell))
+      x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
+    end
+  end
   x.set('AB.Leak.gbar',Leak_gbar);
   x.set('*Controller.m',0);
   for c = 1:length(channels)
