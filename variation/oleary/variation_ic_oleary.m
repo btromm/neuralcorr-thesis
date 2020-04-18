@@ -42,10 +42,13 @@ for i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-save('gbars_IC','gbars');
-save('IC_IC','IC');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
+
+save('gbars_IC','gbars');
+save('IC_IC','IC');
+save('gbars_IC_proper','g_proper');
+save('gbars_IC_other','g_other');
 
 variations.CV_plot(IC,g_proper);
 variations.corr_plot(IC,g_proper,channels);

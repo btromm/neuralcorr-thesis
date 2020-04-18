@@ -43,10 +43,13 @@ for i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-save('gbars_controller_mRNA','gbars');
-save('IC_controller_mRNA','IC');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
+
+save('gbars_controller_mRNA','gbars');
+save('IC_controller_mRNA','IC');
+save('gbars_controller_mRNA_proper','g_proper');
+save('gbars_controller_mRNA_other','g_other');
 
 %variations.IC_plot(gbars,channels,mRNA,'Controller mRNA');
 %savefig('gbarvar');

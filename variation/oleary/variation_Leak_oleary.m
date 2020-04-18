@@ -38,10 +38,13 @@ for i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-save('gbars_Leak','gbars');
-save('IC_Leak','IC');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
+
+save('gbars_Leak','gbars');
+save('IC_Leak','IC');
+save('gbars_Leak_proper','g_proper');
+save('gbars_Leak_other','g_other');
 
 %variations.plot(gbars, channels);
 %savefig('gbarvar');

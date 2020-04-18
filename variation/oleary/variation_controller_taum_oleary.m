@@ -47,10 +47,13 @@ for i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-save('gbars_controller_taum','gbars');
-save('IC_controller_taum','IC');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
+
+save('gbars_controller_taum','gbars');
+save('IC_controller_taum','IC');
+save('gbars_controller_taum_proper','g_proper');
+save('gbars_controller_taum_other','g_other');
 
 %variations.IC_plot(gbars,channels,tau_ms,'tau_m');
 %savefig('gbarvar');

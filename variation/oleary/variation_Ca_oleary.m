@@ -47,10 +47,14 @@ for i = 1:numSim
 
   gbars(:,i) = x.get('*gbar');
 end
-save('gbars_Ca','gbars');
-save('IC_Ca','IC');
 
 [g_proper,g_other] = model.filter_gbars(gbars,metrics_V,metrics0,Ca_s,numSim);
+
+save('gbars_Ca','gbars');
+save('gbars_Ca_proper','g_proper');
+save('gbars_Ca_other','g_other');
+save('IC_Ca','IC');
+
 
 %variations.Ca_plot(gbars_noleak,channels,Ca_target,'Calcium Target');
 %variations.corr_plot(gbars_noleak,channels);
