@@ -31,7 +31,7 @@ parfor i = 1:numSim
     end
   end
   x.set('AB.Leak.gbar',Leak_gbar);
-  x.set('*Controller.m',0);
+  x.set('*Controller.m',initial_condition_noise*rand(length(x.get('*Controller.m')*0+1),1));
   for c = 1:length(channels)
     if ~ismember(channels{c},leak_cell)
       x.set(strcat('AB.',string(channels{c}),'.IntegralController.tau_m'),tau_ms(c,i));

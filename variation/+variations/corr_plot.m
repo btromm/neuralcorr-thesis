@@ -13,6 +13,10 @@ gbars_noleak(7,:) = [];
 channels(7) = [];
 N = length(channels);
 
+% calculate CV
+g0_cv = (std(g0s,0,2)./mean(g0s,2)).*100;
+gbars_cv = (std(gbars,0,2)./mean(gbars,2)).*100;
+
 %plot initial condition correlations
 figure('outerposition',[300 300 1003 1001],'PaperUnits','points','PaperSize',[1003 1001]); hold on
 

@@ -34,7 +34,7 @@ parfor i = 1:numSim
       x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
     end
   end
-  x.set('*Controller.m',0); %always start m from zero
+    x.set('*Controller.m',initial_condition_noise*rand(length(x.get('*Controller.m')*0+1),1));
   x.set('AB.Leak.gbar',Leak_gbar);
   x.set('AB.Ca_target',Ca_target(i))
 

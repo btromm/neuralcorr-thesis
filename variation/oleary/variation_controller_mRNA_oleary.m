@@ -28,7 +28,7 @@ parfor i = 1:numSim
   x.set('*gbar',IC(:,i));
   for c = 1:length(channels)
     if(~ismember(channels{c},leak_cell))
-      x.set(strcat('AB.',string(channels{c}),'.IntegralController.m'),mRNA(c,i));
+      x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
     end
   end
   x.set('AB.Leak.gbar',Leak_gbar);
