@@ -7,10 +7,10 @@ clc;
 
 T_measure = 6e3;
 T_grow = 200e3;
-Leak_gbar = 0.05;
+Leak_gbar = 0.1;
 Ca_target_noise = 30;
 initial_condition_noise = 0.01;
-numSim = 250;
+numSim = 1000;
 leak_cell = {'Leak'};
 
 [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = model.initialize(T_grow,T_measure,1,numSim);
@@ -56,6 +56,6 @@ save('gbars_Ca_proper','g_proper');
 save('gbars_Ca_other','g_other');
 save('IC_Ca','IC');
 
-
+variations.check_successrate(g_proper,numSim)
 %variations.Ca_plot(gbars_noleak,channels,Ca_target,'Calcium Target');
 %variations.corr_plot(gbars_noleak,channels);

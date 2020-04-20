@@ -4,11 +4,11 @@ clear all;
 clc;
 
 %% set global parameters
-T_measure = 200e3;
-T_grow = 1e6;
+T_measure = 6e3;
+T_grow = 200e3;
 numSim = 500;
-initial_condition_noise = 0.01;
-%Leak_gbar = 0.2;
+initial_condition_noise = 0.2;
+Leak_gbar = 0.05;
 %g0 = 1e-1+1e-1*rand(8,1);
 
 %% initialize model
@@ -50,11 +50,11 @@ for c = 1:length(channels)
 end
 
 x.t_end = 200e3;
- x.sim_dt = .1;
-  tic;
-   x.integrate;
-    t = toc;
-     x.t_end/t/1e3
+x.sim_dt = .1;
+tic;
+x.integrate;
+t = toc;
+x.t_end/t/1e3
 
 %% do the simulations!
 

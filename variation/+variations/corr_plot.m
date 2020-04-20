@@ -28,7 +28,7 @@ idx = 1;
 for i = 1:N-1
 	for j = i+1:N
 		idx = idx + 1;
-		ph(i,j) = scatter(ax(i,j),g0s_noleak(i,:),g0s_noleak(j,:),'MarkerFaceColor',c(idx,:),'MarkerEdgeColor',c(idx,:),'MarkerFaceAlpha',.2);
+		ph(i,j) = scatter(ax(i,j),g0s_noleak(i,:),g0s_noleak(j,:),'MarkerFaceColor',c(idx,:),'MarkerEdgeColor',c(idx,:),'MarkerFaceAlpha',.4,'SizeData',5);
 		if j < N
 			set(ax(i,j),'XColor','w');
 		end
@@ -61,7 +61,7 @@ idx = 1;
 for i = 1:N-1
 	for j = i+1:N
 		idx = idx + 1;
-		ph(i,j) = scatter(ax(i,j),gbars_noleak(i,:),gbars_noleak(j,:),'MarkerFaceColor',c(idx,:),'MarkerEdgeColor',c(idx,:),'MarkerFaceAlpha',.2);
+		ph(i,j) = scatter(ax(i,j),gbars_noleak(i,:),gbars_noleak(j,:),'MarkerFaceColor',c(idx,:),'MarkerEdgeColor',c(idx,:),'MarkerFaceAlpha',.4,'SizeData',5);
 		if j < N
 			set(ax(i,j),'XColor','w');
 		end

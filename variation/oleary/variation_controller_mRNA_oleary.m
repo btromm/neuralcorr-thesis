@@ -52,5 +52,6 @@ save('IC_controller_mRNA','IC');
 save('gbars_controller_mRNA_proper','g_proper');
 save('gbars_controller_mRNA_other','g_other');
 
+variations.check_successrate(g_proper,numSim)
 %variations.IC_plot(gbars,channels,mRNA,'Controller mRNA');
 %savefig('gbarvar');

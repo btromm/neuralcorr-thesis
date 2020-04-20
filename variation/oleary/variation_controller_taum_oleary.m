@@ -56,5 +56,6 @@ save('IC_controller_taum','IC');
 save('gbars_controller_taum_proper','g_proper');
 save('gbars_controller_taum_other','g_other');
 
+variations.check_successrate(g_proper,numSim)
 %variations.IC_plot(gbars,channels,tau_ms,'tau_m');
 %savefig('gbarvar');

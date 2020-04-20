@@ -7,7 +7,7 @@ clc;
 
 T_measure = 6e3;
 T_grow = 200e3;
-numSim = 50;
+numSim = 1000;
 Leak_gbar = 0.05;
 initial_condition_noise = .2;
 leak_cell = {'Leak'};
@@ -58,6 +58,7 @@ save('IC_IC','IC');
 save('gbars_IC_proper','g_proper');
 save('gbars_IC_other','g_other');
 
+variations.check_successrate(g_proper,numSim)
 %variations.CV_plot(IC,g_proper);
 %variations.corr_plot(IC,g_proper,channels);
 %savefig('gbarvar');

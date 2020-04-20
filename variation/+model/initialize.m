@@ -16,11 +16,11 @@ x.output_type = 1;
 data = x.integrate;
 metrics0 = xtools.V2metrics(data.AB.V,'sampling_rate',10);
 
+channels = x.AB.find('conductance');
+leak_cell = {'Leak'};
 % add controllers
 switch type
   case 1
-    channels = x.AB.find('conductance');
-    leak_cell = {'Leak'};
     for c = 1:length(channels)
       if ~ismember(channels{c},leak_cell)
         x.AB.(channels{c}).add('oleary/IntegralController');
@@ -30,9 +30,7 @@ switch type
     tau_ms = [];
     tau_gs = [];
   case 2
-    channels = x.AB.find('conductance');
     tau_g0 = zeros(length(channels),1);
-    leak_cell = {'Leak'};
     for c = 1:length(channels)
       if ~ismember(channels{c},leak_cell)
         x.AB.(channels{c}).add('oleary/IntegralController');
@@ -43,9 +41,7 @@ switch type
     tau_gs = abs((repmat(tau_g0,1,numSim))+((repmat(tau_g0,1,numSim)).*(1e-1.*randn(length(channels),numSim))));
     tau_ms = [];
   case 3
-    channels = x.AB.find('conductance');
     tau_m0 = zeros(length(channels),1);
-    leak_cell = {'Leak'};
     for c = 1:length(channels)
       if ~ismember(channels{c},leak_cell)
         x.AB.(channels{c}).add('oleary/IntegralController');
