@@ -59,6 +59,7 @@ save('gbars_IC_proper','g_proper');
 save('gbars_IC_other','g_other');
 
 variations.check_successrate(g_proper,numSim)
+
 %variations.CV_plot(IC,g_proper);
 %variations.corr_plot(IC,g_proper,channels);
 %savefig('gbarvar');

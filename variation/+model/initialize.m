@@ -38,7 +38,7 @@ switch type
         tau_g0(c) = 5e3;
       end
     end
-    tau_gs = abs((repmat(tau_g0,1,numSim))+((repmat(tau_g0,1,numSim)).*(1e-1.*randn(length(channels),numSim))));
+    tau_gs = tau_g0;
     tau_ms = [];
   case 3
     tau_m0 = zeros(length(channels),1);
@@ -48,7 +48,7 @@ switch type
         tau_m0(c) = 5e6/x.AB.(channels{c}).gbar;
       end
     end
-    tau_ms = abs((repmat(tau_m0,1,numSim))+((repmat(tau_m0,1,numSim)).*(1e-1.*randn(length(channels),numSim))));
+    tau_ms = tau_m0;
     tau_gs = [];
 end
 

@@ -13,10 +13,10 @@ Leak_gbar = 0.2;
 
 [x,metrics0,channels] = model.initialize(T_grow,T_measure,1,numSim);
 
-% constants
-mRNA_controller = (initial_condition_noise/50)*rand(length(x.get('*Controller.m')),1);
-mRNA = initial_condition_noise*rand(8,1);
-IC = initial_condition_noise.*rand(length(channels),1);
+% general variation
+mRNA_controller = (initial_condition_noise/50)*rand(length(x.get('*Controller.m')),numSim);
+mRNA = initial_condition_noise*rand(8,numSim);
+IC = initial_condition_noise.*rand(length(channels),numSim);
 
 % specific variation
 Leak_gbars = Leak_gbar.*rand(1,numSim);
@@ -31,13 +31,13 @@ Ca_tgt = NaN(1,numSim);
 parfor i = 1:numSim
   disp(i)
   x.set('t_end',T_grow);
-  x.set('*gbar',IC);
+  x.set('*gbar',IC(:,i));
   for c = 1:length(channels)
     if(~ismember(channels{c},leak_cell))
-      x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c));
+      x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
     end
   end
-  x.set('*Controller.m',mRNA_controller); %always start m from zero
+  x.set('*Controller.m',mRNA_controller(:,i)); %always start m from zero
   x.set('AB.Leak.gbar',Leak_gbars(i));
 
   x.integrate;
