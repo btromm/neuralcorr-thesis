@@ -7,21 +7,22 @@ clc;
 
 T_measure = 6e3;
 T_grow = 200e3;
-numSim = 50;
+numSim = 1000;
 Leak_gbar = 0.05;
 initial_condition_noise = 0.01;
 leak_cell = {'Leak'};
+tau_noise = 2e3;
 
 [x,metrics0,channels,Ca_target0,tau_ms,tau_gs] = model.initialize(T_grow,T_measure,3,numSim);
 
 
 % general variation
-mRNA_controller = (initial_condition_noise/50)*rand(length(x.get('*Controller.m')),numSim);
+mRNA_controller = (initial_condition_noise/2.5)*rand(length(x.get('*Controller.m')),numSim);
 mRNA = initial_condition_noise*rand(8,numSim);
 IC = initial_condition_noise.*rand(length(channels),numSim);
 
 % specific variation
-tau_ms = abs((repmat(tau_ms,1,numSim))+((repmat(tau_ms,1,numSim)).*(randn(length(channels),numSim))));
+tau_ms = abs((repmat(tau_ms,1,numSim)*0.75)+((repmat(tau_ms,1,numSim)).*(rand(length(channels),numSim))));
 
 gbars = NaN(8,numSim);
 Ca_avg = NaN(1,numSim);
@@ -61,6 +62,7 @@ save('gbars_controller_taum','gbars');
 save('IC_controller_taum','IC');
 save('gbars_controller_taum_proper','g_proper');
 save('gbars_controller_taum_other','g_other');
+save('var_tau_ms','tau_ms');
 
 variations.check_successrate(g_proper,numSim)
 %variations.IC_plot(gbars,channels,tau_ms,'tau_m');

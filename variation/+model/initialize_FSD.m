@@ -1,4 +1,4 @@
-function [x,metrics0,channels,FTarget,STarget,DTarget,tau_ms,tau_gs] = initialize(T_grow,T_measure,type,numSim)
+function [x,metrics0,channels,F,S,D,tau_gs] = initialize(T_grow,T_measure,type,numSim)
 
   x = xolotl.examples.neurons.BurstingNeuron('prefix','prinz');
 
@@ -34,6 +34,21 @@ function [x,metrics0,channels,FTarget,STarget,DTarget,tau_ms,tau_gs] = initializ
   switch type
     case 1
       for c = 1:length(channels)
-        if ~ismember(channels{c},leakcell)
-          x.AB.(channels{c}).add('src/IntegralController');
+        if ~ismember(channels{c},leak_cell)
+          x.AB.(channels{c}).add('src/IntegralController','A',A(c),'B',B(c),'C',C(c),'FTarget',F,'STarget',S,'DTarget',D);
+          tau_gs = [];
         end
+      end
+    case 2
+      for c = 1:length(channels)
+        if ~ismember(channels{c},leak_cell)
+          x.AB.(channels{c}).add('src/IntegralController','A',A(c),'B',B(c),'C',C(c),'FTarget',F,'STarget',S,'DTarget',D);
+          tau_gs(c) = 5e3;
+        end
+      end
+    end
+
+    x.dt = 0.1;
+    x.output_type = 0;
+    x.t_end = T_grow;
+    x.sim_dt = 0.1;

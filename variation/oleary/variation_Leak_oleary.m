@@ -14,7 +14,7 @@ Leak_gbar = 0.2;
 [x,metrics0,channels] = model.initialize(T_grow,T_measure,1,numSim);
 
 % general variation
-mRNA_controller = (initial_condition_noise/50)*rand(length(x.get('*Controller.m')),numSim);
+mRNA_controller = (initial_condition_noise/2.5)*rand(length(x.get('*Controller.m')),numSim);
 mRNA = initial_condition_noise*rand(8,numSim);
 IC = initial_condition_noise.*rand(length(channels),numSim);
 

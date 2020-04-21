@@ -20,7 +20,7 @@ for i = 1:1
   if ~exist('variation','var')
     histogram(g0s(i,:),20,'DisplayStyle','stairs');
   else
-    histogram(variation,20,'DisplayStyle','stairs');
+    histogram(variation(i,:),20,'DisplayStyle','stairs');
   end
   ax = gca;
   ax.Box = 'off';

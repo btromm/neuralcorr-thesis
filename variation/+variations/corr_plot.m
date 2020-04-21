@@ -1,5 +1,5 @@
 
-function ph = corr_plot(g0s, gbars, channels)
+function ph = corr_plot(g0s, gbars, channels,varname)
 
 
 
@@ -47,7 +47,8 @@ for i = 1:N-1
 
 	end
 end
-sgtitle('Correlations between g_0')
+fig_title_g0 = strcat('Correlations between g_0 before variation in',{' '},varname);
+sgtitle(fig_title_g0);
 figlib.pretty('PlotLineWidth',1)
 
 % plot g-> infinity correlations
@@ -80,5 +81,6 @@ for i = 1:N-1
 
 	end
 end
-sgtitle('Correlations between g_\infty')
+fig_title_gss = strcat('Correlations between g_\infty after variation in',{' '},varname)
+sgtitle(fig_title_gss);
 figlib.pretty('PlotLineWidth',1)

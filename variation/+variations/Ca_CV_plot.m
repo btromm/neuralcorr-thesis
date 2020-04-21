@@ -27,7 +27,7 @@ for i = 1:1
     label = strcat('g0',model.subscript(channels{i}));
     title_cat = strcat('CV = ',{' '},num2str(g0_cv(i),3));
   else
-    label = strcat('g',model.subscript(varname));
+    label = strcat('Ca',model.subscript('Target'));
     title_cat = strcat('CV = ',{' '},num2str(variation_cv,3));
   end
   xlabel(label);
