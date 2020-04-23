@@ -2,3 +2,4 @@
 *.fig
 *.png
 run_all.m
+variation/*
