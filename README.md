@@ -3,7 +3,7 @@
 `NEUR 99B: Senior Thesis`   
 `Brandeis University, Fall 2019 - Spring 2020`
 
-#### Author: Bobby Tromm :aquarius:
+#### Author: Bobby Tromm
 > btromm@brandeis.edu   
 > B/S Neuroscience '20   
 > Department of Biology, School of Arts and Sciences, Brandeis University   
