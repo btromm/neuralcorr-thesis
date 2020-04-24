@@ -14,11 +14,3 @@
 > Professor of Biology, Member of US National Academy of Sciences   
 > marder@brandeis.edu   
 > Volen Center for Complex Systems, Department of Biology, Brandeis University
-
-#### Useful Links
-
-* Reference:
-  * [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
-
-Notes to self:
-* Add Notion page for LaTeX wiki
