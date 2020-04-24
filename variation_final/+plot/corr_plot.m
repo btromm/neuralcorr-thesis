@@ -8,28 +8,12 @@ function ph = corr_plot(type,g0s,g_proper,channels,i)
   g0_cv = (std(g0s,0,2)./mean(g0s,2));
   gbars_cv = (nanstd(g_proper,0,2)./nanmean(g_proper,2));
 
-  switch type
-  case 1
-    ph = uipanel('position',[0.05,1.8/6,0.45,2.2/6],'BackgroundColor','white','BorderType','none')
-    %ph = uipanel('position',[0 .5 1 .5]);
-    if i == length(channels)
-      scatterhist(g0s(i,:),g0s(1,:),'Kernel','on','Parent',ph);
-      %scatter(g0s(i,:),g0s(1,:));
-
-      if strcmp(channels(1),'ACurrent')
-        labely = 'g0_A';
-      elseif strcmp(channels(1),'HCurrent')
-        labely = 'g0_H';
-      else
-        labely = strcat('g0',misc.subscript(channels{1}));
-      end
-      ylabel(labely);
-    else
-      scatterhist(g0s(i,:),g0s(i+1,:),'Kernel','on','Parent',ph);
-      %scatter(g0s(i,:),g0s(i+1,:));
-      labely = strcat('g0',misc.subscript(channels{i+1}));
-      ylabel(labely);
-    end
+switch type
+case 1
+    ph = uipanel('position',[0.0,1.8/6,0.45,2.2/6],'BackGroundColor','white','BorderType','none');
+    h = scatterhist(g0s(i,:),g0s(i+1,:),'Kernel','on','Parent',ph,'Direction','out');
+    labely = strcat('g0',misc.subscript(channels{i+1}));
+    ylabel(labely);
     if strcmp(channels(1),'ACurrent')
       labelx = 'g0_A';
     elseif strcmp(channels(1),'HCurrent')
@@ -40,28 +24,27 @@ function ph = corr_plot(type,g0s,g_proper,channels,i)
     xlabel(labelx);
     figtitle = strcat('CV =',{' '},num2str(g0_cv(i),3));
     title(figtitle)
-    %xlim([0 5]);
-    %ylim([0 5]);
-    % need to add CVs
+
   case 2
-    ph = uipanel('position',[0.5,1.8/6,0.45,2.2/6],'BackgroundColor','white','BorderType','none')
-    if i == length(channels)
-      scatterhist(g_proper(i,:),g_proper(1,:),'Kernel','on','Location','SouthEast','Parent',ph);
-      %scatter(g_proper(i,:),g_proper(1,:));
-      if strcmp(channels(1),'ACurrent')
-        labely = 'g_A';
-      elseif strcmp(channels(1),'HCurrent')
-        labely = 'g_H';
-      else
-        labely = strcat('g',misc.subscript(channels{1}));
-      end
-      ylabel(labely);
-    else
-      scatterhist(g_proper(i,:),g_proper(i+1,:),'Kernel','on','Location','SouthEast','Parent',ph);
-      %scatter(g_proper(i,:),g_proper(i+1,:));
-      labely = strcat('g',misc.subscript(channels{i+1}));
-      ylabel(labely);
-    end
+    ph = uipanel('position',[0.55,1.8/6,0.45,2.2/6],'BackGroundColor','white','BorderType','none');
+    ph2 = uipanel('position',[0.415,2.93/6,0.17,0.5/6],'BackGroundColor','white','BorderType','none');
+    annotation(ph2,'arrow',[0 1],[0.5 0.5],'LineWidth',1.5,'HeadWidth',15);
+    h = scatterhist(g_proper(i,:),g_proper(i+1,:),'Kernel','on','Parent',ph,'Direction','out','Location','SouthEast');
+    xlim([min(g_proper(i,:))-200 max(g_proper(i,:))+200]);
+    ylim([min(g_proper(i+1,:))-50 max(g_proper(i+1,:))+50]);
+    g_temp = find(~isnan(g_proper(i,:)));
+    g_proper1 = g_proper(i,g_temp);
+    g_temp = find(~isnan(g_proper(i+1,:)));
+    g_proper2 = g_proper(i+1,g_temp);
+    [P,S] = polyfit(g_proper1,g_proper2,1);
+    rsquared = 1 - (S.normr/norm(g_proper2 - mean(g_proper2)))^2;
+    str = strcat('m =',{' '},num2str(P(1),3),{'\newline'},'R^2 =',{' '},num2str(rsquared,3))
+    annotation(ph,'textbox',[0.45 0.575 0.3,0.3],'EdgeColor',[1 1 1],'String',str,'FitBoxToText','on','FontSize',10);
+
+    % = TextLocation(str,'Location','northeast');
+    %gtext(str);
+    labely = strcat('g',misc.subscript(channels{i+1}));
+    ylabel(labely);
     if strcmp(channels(1),'ACurrent')
       labelx = 'g_A';
     elseif strcmp(channels(1),'HCurrent')
@@ -70,12 +53,12 @@ function ph = corr_plot(type,g0s,g_proper,channels,i)
       labelx = strcat('g',misc.subscript(channels{i}));
     end
     xlabel(labelx);
-    xlim([375 750]);
-    xticks([400 565 725]);
-    ylim([40 80]);
     figtitle = strcat('CV =',{' '},num2str(gbars_cv(i),3));
     title(figtitle);
-    % need to add CVs
+    figlib.pretty('PlotLineWidth',1.5,'LineWidth',1);
+    for j = 1:3
+      if(strcmp(h(j).Tag,'xhist') || strcmp(h(j).Tag,'yhist'))
+        set(h(j),'XLimMode','auto');
+      end
+    end
   end
-
-  figlib.pretty('PlotLineWidth',1.5,'LineWidth',1.5);

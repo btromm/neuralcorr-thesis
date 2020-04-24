@@ -5,14 +5,15 @@ function [ph,CVs_g,CVs_v,ponr] = var_plot(gbars,g_proper,var,i,channels,exp)
   % var -- independent variable in the simulation
   % i -- index of desired channel
   % exp -- name of experiment
-
   ph = uipanel('position',[0,0,1,1.75/6],'BackgroundColor','white','BorderType','none');
 
   if ~strcmp(exp,'Leak') && ~strcmp(exp,'Ca_t_a_r_g_e_t')
     v = var(i,:);
+  else
+    v = var;
   end
-  g_wrk = g_proper(i,:)
-  g = gbars(i,:);
+  g_wrk = g_proper(i,:);
+  g = gbars(i,:);;
 
   v = sort(v);
   g = sort(g);
@@ -46,7 +47,10 @@ function [ph,CVs_g,CVs_v,ponr] = var_plot(gbars,g_proper,var,i,channels,exp)
   end
   fig = figure('outerposition',[300 300 1003 1001],'PaperUnits','points','PaperSize',[1003 1001]); hold on
 
-  plot(CVs_v(1:ponr*2),CVs_g(1:ponr*2));
+  plot(CVs_v(1:ponr),CVs_g(1:ponr),'LineWidth',1);
+  set(gca,'FontSize',18,'LineWidth',1);
+  figlib.pretty('PlotLineWidth',1.5,'LineWidth',1);
+  xlim([CVs_v(1) CVs_v(ponr)+0.1*CVs_v(ponr)]);
   xline(CVs_v(ponr),'-',{'Convergence','Limit'},'LineWidth',1.5);
 
   if(strcmp(exp,'g_0'))
@@ -64,7 +68,5 @@ function [ph,CVs_g,CVs_v,ponr] = var_plot(gbars,g_proper,var,i,channels,exp)
     labely = strcat('Variability in g',misc.subscript(channels{i}));
   end
   ylabel(labely);
-
-  figlib.pretty('PlotLineWidth',1.5,'LineWidth',1.5);
   set(get(fig,'Children'),'parent',ph);
   close(fig);

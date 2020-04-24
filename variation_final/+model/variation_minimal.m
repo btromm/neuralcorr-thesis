@@ -1,4 +1,4 @@
-function [V,time,g0,gbars] = variation_minimal(exp,type)
+function [V,time,g0,gbars] = variation_minimal(exp,type,var)
   %VARIATION_MINIMAL Run any experiment from this thesis, any time, anywhere
   %   exp -- what are we varying? (IC, Leak, tau_m, tau_g, Ca_target)
   %   type -- 1 (voltage trace b4 integration), 2 (voltage trace after integration), 3 (g0 & gbars)
@@ -32,8 +32,13 @@ end
 
 switch exp
 case 'Ca_t_a_r_g_e_t'
-    Ca_target_noise = 30;
-    Ca_target = (ones(numSim,1)*Ca_target0)+(1+randn(numSim,1).*Ca_target_noise);
+  Ca_target_noise = 30;
+  Ca_target = (ones(numSim,1)*Ca_target0)+(1+randn(numSim,1).*Ca_target_noise);
+case 'tau_g'
+  tau_gs = var;
+case 'tau_m'
+  tau_ms = var;
+
 end
 
 % Initial condition variation
@@ -43,11 +48,19 @@ g0 = initial_condition_noise.*rand(length(channels),numSim);
 
 switch type
 case 1 % trace before convergence
-  [V,time] = model.trace_before(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels);
+  if(strcmp(exp,'Ca_t_a_r_g_e_t'))
+    [V,time] = model.trace_before(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,Ca_target);
+  else
+    [V,time] = model.trace_before(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels);
+  end
   g0 = NaN;
   gbars = NaN;
 case 2 % trace after convergence
-  [V,time] = model.trace_after(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0);
+  if(strcmp(exp,'Ca_t_a_r_g_e_t'))
+    [V,time] = model.trace_after(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,Ca_target);
+  else
+    [V,time] = model.trace_after(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0);
+  end
   g0 = NaN;
   gbars = NaN;
 case 3 % fun with gbars

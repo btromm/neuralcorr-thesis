@@ -1,4 +1,4 @@
-function [V,time] = trace_after(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0)
+function [V,time] = trace_after(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,Ca_target)
   %TRACE_AFTER This function returns V and time after model has converged
   %   exp -- what are we varying?
   model_ok = 0;

@@ -1,4 +1,4 @@
-function [V,time] = trace_before(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels)
+function [V,time] = trace_before(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,Ca_target)
   %TRACE_BEFORE This function returns V and time before model has converged
   %   exp -- what are we varying?
 
