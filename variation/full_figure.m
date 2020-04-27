@@ -9,7 +9,7 @@ function [fig1,fig2] = full_figure(g0s,gbars,g_proper,var)
   g0s(7,:) = [];
   g_proper(7,:) = [];
 
-  model.gen_channels;
+  channels = model.gen_channels;
   channels(7) = [];
   N = length(channels);
 

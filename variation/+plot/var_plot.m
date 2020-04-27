@@ -37,9 +37,9 @@ function [ph,CVs_g,CVs_v,ponr] = var_plot(gbars,g_proper,var,i,channels,exp)
     CVs_v(j) = std(vsample)/mean(vsample);
 
     % find point of no return
-    g_wrk = intersect(g_wrk,gsample);
+    g_good = intersect(g_wrk,gsample);
     if(ponr_check == 0)
-      if(length(g_wrk)/length(gsample) < 0.1)
+      if(length(g_good)/length(gsample) < 0.1)
         ponr = j;
         ponr_check = 1;
       end

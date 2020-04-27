@@ -10,12 +10,12 @@ function model_ok = metric_check(gbars,metrics_V,metrics0,Ca_avg,Ca_tgt)
 
   metrics = xtools.V2metrics(metrics_V,'sampling_rate',10);
 
-  if (metrics0.burst_period - metrics.burst_period)/metrics0.burst_period > .2
+  if (metrics0.burst_period - metrics.burst_period)/metrics0.burst_period > .2 || isnan(metrics.burst_period)
     disp('Burst periods not OK')
     return
   end
 
-  if (metrics0.duty_cycle_mean - metrics.duty_cycle_mean)/metrics0.duty_cycle_mean > .1
+  if (metrics0.duty_cycle_mean - metrics.duty_cycle_mean)/metrics0.duty_cycle_mean > .1 || isnan(metrics.burst_period)
     disp('Duty cycle not OK')
     return
   end
