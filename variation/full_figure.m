@@ -1,7 +1,5 @@
 function [fig1,fig2] = full_figure(g0s,gbars,g_proper,var)
   %% This function produces full figures for each experiment
-  % Could be made into a main script which pulls gbars before plotting pub. figures, but not necessary as I already have the data.
-  % Will turn this into a main script once my thesis is written, so others can reproduce my work more easily :)
 
   exp = 'tau_m'; % choose your fighter!
 

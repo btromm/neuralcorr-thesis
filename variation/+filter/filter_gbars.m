@@ -14,14 +14,14 @@ for i = 1:numSim
 
   metrics = xtools.V2metrics(metrics_V(:,i),'sampling_rate',10);
 
-  if (metrics0.burst_period - metrics.burst_period)/metrics0.burst_period > .2
+  if (metrics0.burst_period - metrics.burst_period)/metrics0.burst_period > .2 || isnan(metrics.burst_period)
     disp(i)
     disp('Burst periods not OK')
     g_other(:,i) = gbars(:,i);
     continue
   end
 
-  if (metrics0.duty_cycle_mean - metrics.duty_cycle_mean)/metrics0.duty_cycle_mean > .1
+  if (metrics0.duty_cycle_mean - metrics.duty_cycle_mean)/metrics0.duty_cycle_mean > .1 || isnan(metrics.duty_cycle_mean)
     disp(i)
     disp('Duty cycle not OK')
     g_other(:,i) = gbars(:,i);

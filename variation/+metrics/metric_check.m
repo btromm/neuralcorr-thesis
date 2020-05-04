@@ -15,7 +15,7 @@ function model_ok = metric_check(gbars,metrics_V,metrics0,Ca_avg,Ca_tgt)
     return
   end
 
-  if (metrics0.duty_cycle_mean - metrics.duty_cycle_mean)/metrics0.duty_cycle_mean > .1 || isnan(metrics.burst_period)
+  if (metrics0.duty_cycle_mean - metrics.duty_cycle_mean)/metrics0.duty_cycle_mean > .1 || isnan(metrics.duty_cycle_mean)
     disp('Duty cycle not OK')
     return
   end
