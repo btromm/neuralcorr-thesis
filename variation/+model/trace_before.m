@@ -1,14 +1,9 @@
-function [V,time] = trace_before(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,Ca_target)
+function [V,time] = trace_before(x,exp,g0,mRNA_controller,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,Ca_target)
   %TRACE_BEFORE This function returns V and time before model has converged
   %   exp -- what are we varying?
 
-  x.set('*gbar',g0(:,1));
+  x.set('*gbar',rand(8,1));
   x.set('*Controller.m',mRNA_controller(:,1));
-  for c = 1:length(channels)
-    if(~ismember(channels{c},leak_cell))
-      x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,1));
-    end
-  end
 
   switch exp
   case 'tau_m'
@@ -25,6 +20,11 @@ function [V,time] = trace_before(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,
     end
   case 'Ca_t_a_r_g_e_t'
     x.set('AB.Ca_target',Ca_target(1));
+  end
+  for i = 1:length(channels)
+    if(~strcmp(channels(i),leak_cell))
+      x.AB.(channels{i}).IntegralController.tau_g = 99999
+    end
   end
 
   if strcmp(exp,'Leak')

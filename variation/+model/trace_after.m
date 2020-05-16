@@ -1,4 +1,4 @@
-function [V,time] = trace_after(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,Ca_target)
+function [V,time] = trace_after(x,exp,g0,mRNA_controller,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,Ca_target)
   %TRACE_AFTER This function returns V and time after model has converged
   %   exp -- what are we varying?
   model_ok = 0;
@@ -10,11 +10,6 @@ function [V,time] = trace_after(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,t
 
     x.set('*gbar',g0(:,i));
     x.set('*Controller.m',mRNA_controller(:,i));
-    for c = 1:length(channels)
-      if(~ismember(channels{c},leak_cell))
-        x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
-      end
-    end
 
     switch exp
     case 'tau_m'

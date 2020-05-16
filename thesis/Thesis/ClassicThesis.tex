@@ -32,9 +32,10 @@
     \WarningFilter{scrreprt}{Usage of package `titlesec'}
     %\WarningFilter{scrreprt}{Activating an ugly workaround}
     \WarningFilter{titlesec}{Non standard sectioning command detected}
-\documentclass[ twoside,openright,titlepage,numbers=noenddot,%1headlines,
-                headinclude,footinclude,cleardoublepage=empty,abstract=on,
-                BCOR=5mm,paper=a4,fontsize=11pt
+\documentclass[ oneside,openright,titlepage,numbers=noenddot,headinclude,%1headlines,% letterpaper a4paper
+                footinclude=true,cleardoublepage=empty,abstractoff, % <--- obsolete, remove (todo)
+                BCOR=5mm,paper=a4,fontsize=11pt,%11pt,a4paper,%
+                ngerman,american,%
                 ]{scrreprt}
 
 %********************************************************************
@@ -46,7 +47,7 @@
 % Bibliographies
 %*******************************************************
 \addbibresource{Bibliography.bib}
-\addbibresource[label=ownpubs]{AMiede_Publications.bib}
+%\addbibresource[label=ownpubs]{AMiede_Publications.bib}
 
 %********************************************************************
 % Hyphenation
@@ -67,13 +68,13 @@
 %********************************************************************
 % Frontmatter
 %*******************************************************
-\include{FrontBackmatter/DirtyTitlepage}
+%\include{FrontBackmatter/DirtyTitlepage}
 \include{FrontBackmatter/Titlepage}
 \include{FrontBackmatter/Titleback}
-\cleardoublepage\include{FrontBackmatter/Dedication}
+%\cleardoublepage\include{FrontBackmatter/Dedication}
 %\cleardoublepage\include{FrontBackmatter/Foreword}
 \cleardoublepage\include{FrontBackmatter/Abstract}
-\cleardoublepage\include{FrontBackmatter/Publications}
+%\cleardoublepage\include{FrontBackmatter/Publications}
 \cleardoublepage\include{FrontBackmatter/Acknowledgments}
 \cleardoublepage\include{FrontBackmatter/Contents}
 %********************************************************************
@@ -85,28 +86,23 @@
 %\setcounter{page}{90}
 % use \cleardoublepage here to avoid problems with pdfbookmark
 \cleardoublepage
-\part{Some Kind of Manual}\label{pt:manual}
 \include{Chapters/Chapter01}
 \cleardoublepage
-\ctparttext{You can put some informational part preamble text here.
-Illo principalmente su nos. Non message \emph{occidental} angloromanic
-da. Debitas effortio simplificate sia se, auxiliar summarios da que,
-se avantiate publicationes via. Pan in terra summarios, capital
-interlingua se que. Al via multo esser specimen, campo responder que
-da. Le usate medical addresses pro, europa origine sanctificate nos se.}
-\part{The Showcase}\label{pt:showcase}
+
 \include{Chapters/Chapter02}
 %\addtocontents{toc}{\protect\clearpage} % <--- just debug stuff, ignore
 \include{Chapters/Chapter03}
 %\include{multiToC} % <--- just debug stuff, ignore for your documents
+\include{Chapters/Chapter04}
+\include{Chapters/Chapter05}
 % ********************************************************************
 % Backmatter
 %*******************************************************
-\appendix
+%\appendix
 %\renewcommand{\thechapter}{\alph{chapter}}
-\cleardoublepage
-\part{Appendix}
-\include{Chapters/Chapter0A}
+%\cleardoublepage
+%\part{Appendix}
+%\include{Chapters/Chapter0A}
 %********************************************************************
 % Other Stuff in the Back
 %*******************************************************

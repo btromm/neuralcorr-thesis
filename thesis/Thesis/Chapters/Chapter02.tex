@@ -1,0 +1,204 @@
+%************************************************
+\chapter{Methods}\label{ch:methods}
+%************************************************
+
+This thesis relies on a previously described model of a neuron. It is a single-compartment, conductance-based neuron which is based on the Hogkin-Huxley formalism\cite{hodgkin_components_1952,hodgkin_measurement_1952,hodgkin_quantitative_1952}. Previous work has utilized this model neuron as a backbone for exploration of homeostatic compensatory mechanisms\cite{oleary_correlations_2013,oleary_cell_2014,liu_model_1998}.
+This model represents the neuron as a circuit\cite{hodgkin_quantitative_1952}. Figure \ref{fig:hhcircuit} details the circuit diagram of the neuron as a representation of the cell membrane acting as a capacitor with various ion channels as resistors. The membrane takes in current from the outside, which can be described in more detail as the neuron's neuromodulatory environment.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[angle=0.75,width=\linewidth]{gfx/hodgkinhuxleycircuit.png}
+    \caption[Circuit diagram representing membrane of a neuron.]{Circuit diagram representing the membrane of a neuron. \ac{Cm} represents the total capacitance of the neuron. Resistors represent \(1/\acs{gNaV}\), \(1/\acs{gK}\), and \(1/\ac{gleak}\)\cite{hodgkin_quantitative_1952}.}
+    \label{fig:hhcircuit}
+\end{figure}
+
+The model neuron has eight transmembrane currents and associated conductances: \acf{INaV}, \acf{IA}, \acf{IH}, \acf{IKCa}, \acf{IKd}, \acf{ICaS}, \acf{ICaT}, and \acf{Ileak}.
+The associated maximal conductances of the first seven transmembrane currents are regulated by the integral control scheme mentioned in Section \ref{homeostaticrules}. \ac{gleak} is not regulated in this model.
+
+\section{Neurodynamics} \label{neurodynamics}
+
+Neurons are considered to consist of a single compartment, acting as a capacitor, with various ionic currents acting as resistors in parallel, and a specific surface area (in units $mm^2$).
+The compartment has a \acf{Vm}, which evolves according to the equation:
+
+\begin{equation} \label{eq:voltage}
+C_m \frac{\mathrm{d}V_m}{\mathrm{d}t} = \sum_{i} I_i
+\end{equation}
+
+where $\acs{Cm}$ is the specific capacitance of the membrane and $I_i$ is each ionic current in the neuron\cite{gorur-shandilya_xolotl_2018}. Current is given by the equation
+
+\begin{equation} \label{eq: current}
+    I_i = g_i(V)(V - E_i)
+\end{equation}
+
+where $g_i(V)$ is instantaneous conductance and $E_i$ is the reversal potential (Nernst potential) for each ion channel\cite{gorur-shandilya_xolotl_2018}. Reversal potentials for each ion channel, excluding Ca\textsuperscript{2+}-dependent channels, are considered constant and are described in Section \ref{modelparameters}. This simplification is justified by the law of large numbers -- intracellular and extracellular ion concentration are saturated, resulting in effectively constant flux of ions in and out of the cell\cite{liu_model_1998}. Instantaneous conductance $g_i(V)$ is defined by the equation:
+
+\begin{equation} \label{eq: conductance}
+    g_i(V) = \bar{g_i} m_i^{p_i} h_i^{q_i}
+\end{equation}
+
+where
+
+\begin{tabular}{ll}
+    $\bar{g_i}$     & maximal conductance for each ion channel \\
+    $m$             & activation gating variable \\
+    $h$             & inactivation gating variable \\
+    $p, q$          & integers \\
+\end{tabular}
+
+The integers $p$ and $q$ are bound by an interval $[0,1]$\cite{gorur-shandilya_xolotl_2018}. The activation and inactivation variables are themselves defined by an ordinary differential equation which depends on \ac{Vm}, and is specific to each conductance. The general form is:
+
+\begin{align}
+    \tau_m \frac{\mathrm{d}m}{\mathrm{d}t} = m_\infty - m \\
+    \tau_h \frac{\mathrm{d}h}{\mathrm{d}t} = h_\infty - h
+\end{align}
+
+where $\tau_m$ and $\tau_h$ are time constants and $m_\infty$ and $h_\infty$ are steady-state values of the activation and inactivation variables\cite{prinz_alternative_2003}. Each conductance has a characteristic steady-state density and time constant which represent its function in the overall neurodynamics of the neuron.
+
+\section{Homeostatic Rules}\label{homeostaticrules}
+
+Regulation of firing rate activity in this thesis will rely on an activity-dependent feedback mechanism for regulating ion channel maximal conductances\cite{oleary_correlations_2013,oleary_cell_2014,liu_model_1998,prinz_alternative_2003}.
+This mechanism relies on calcium as a sensor, by which neurons may regulate their activity. Section \ref{corr_homeostasis} provides an explanation of the use of calcium ions as an indirect representation of \ac{Vm} activity.
+Calcium dynamics in this model evolve according to the equation:
+
+\begin{equation} \label{eq:calcium}
+    \tau_{Ca} \frac{\mathrm{d}[Ca^{2+}]}{\mathrm{d}t} = -f(I_{CaT} + I_{CaS}) - [Ca^{2+}] + [Ca^{2+}]_0
+\end{equation}
+
+where $\tau_{Ca}$ is the time constant, $f$ translates $Ca^{2+}$ current into an intracellular concentration change, and $[Ca^{2+}]_0$ is the steady state intracellular $Ca^{2+}$ concentration if there is no flux of calcium ions across the membrane\cite{prinz_alternative_2003,liu_model_1998}.
+
+The activity-dependent feedback mechanism is based on regulation by a calcium-dependent homeostatic rule, first implemented by O'Leary \textit{et al.}\cite{oleary_cell_2014}.
+Regulation of maximal conductances is simulated by two integral control equations:
+
+\begin{align} \label{eq:integralregulation}
+    \tau_i \dot{m_i} &= [Ca^{2+}] - Ca_{tgt} \\
+    \label{eq:integralregulation2}
+    \tau_g \dot{g_i} &= m_i - g_i
+\end{align}
+
+where $\tau_i$ represents the transcription timescale for each ion channel, $\tau_g$ represents global transcription timescale, $m_i$ represents mRNA levels for each ion channel, and $Ca_{tgt}$ represents global Ca\textsuperscript{2+} target concentration. Variables are bounded at 0 to ensure that conductances do not become negative.
+
+In this model, $Ca^{2+}$ acts as a feedback control signal. It is purposefully simple, focusing on the essential biological principles underlying formation and degradation of ion channel proteins. Obviously, neurons possess a significant number of other mechanisms of regulation, such as co-trafficking of ion channels, cotranslational interaction, RNA interference, and the use of promoters\cite{oleary_cell_2014,shi_subunits_1996,vanoye_kcnq1/kcne1_2010,arcangeli_ion_2011,frank_endogenous_2011,zhang_recovery_2011}. Occam's razor dictates that "the simplest solution is most likely the right one," and we will use this as a guideline moving forward.
+
+Steady-state values of $m_i$ are found to be dependent on the time integral of average $[Ca^{2+}]$ and scaled by the inverse of the time constant for the channel $\tau_i$. We can then estimate steady state $g_i$ for very small initial conductance values and positive time constants. We can see this by taking the integral of Equation \ref{eq:integralregulation}:
+
+\begin{equation} \label{eq:steadystateg}
+    g_i \approx m_i = \frac{1}{\tau_i} \int_{0}^{t_{ss}} ([Ca^{2+}] - Ca_tgt)dt
+\end{equation}
+
+Figure \ref{eq:steadystateg} also shows how correlations between ion channels emerge when $m_i$ converges to the value dependent on the time integral of average $[Ca^{2+}]$. When one takes ratios between channels, the integrals cancel out, so that:
+
+\begin{equation}
+    \frac{g_i}{g_j} \approx \frac{\tau_j}{\tau_i}
+\end{equation}
+
+It can be seen here that different ratios of the time constants determine the correlations between ion channel conductances. These ratios can determine the electrophysiological character of the neuron, as is further discussed in Section \ref{corr_homeostasis}.
+
+\section{Model Parameters} \label{modelparameters}
+
+Model parameters are adapted from previous work, and are used as the basis for variation in each experiment presented in this thesis\cite{prinz_alternative_2003,oleary_cell_2014,liu_model_1998}.
+
+Each ionic current has its own reversal potential. These values dictate the membrane potential at which ions begin to move in the opposite direction.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ccccccccc}
+         \textsc{Current} & \ac{INaV} & \ac{IA} & \ac{IH} & \ac{IKd} & \ac{IKCa} & \ac{Ileak} \\
+         \hline
+         $E \mathrm{(mV)}$ & +50 & -80 & -20 & -80 & -80 & -50
+    \end{tabular}
+    \caption[Reversal potentials for each ion channel.]{Reversal potential for each ionic current. Reversal potential of \ac{ICaT} and \ac{ICaS} are not constant and derived from the Nernst potential.\cite{prinz_alternative_2003}}
+    \label{tab:revpotential}
+\end{table}
+
+\ac{Vm} evolves with time according to Equation \ref{eq:voltage} where specific membrane capacitance $C_m = 0.628nF$\cite{hodgkin_quantitative_1952}.
+
+Ca\textsuperscript{2+} concentration is dynamic, evolving according to Equation \ref{eq:calcium}, where
+
+   \begin{tabular}{l}
+     $\tau_{Ca} = 200ms$ \\
+     $f = 14.96 \mu M/nA$
+    \end{tabular}
+    
+$\tau_{Ca}$ is the calcium buffering time constant, and $f$ is the factor which converts calcium current into intracellular calcium concentration change. This factor depends on the ratio of the surface area of the cell to the volume wherein Ca\textsuperscript{2+} concentration is measured\cite{liu_model_1998}. In this case, volume is considered to be a narrow shell inside the membrane and approximates the neuron by a cylinder $50 \mu m$ in diameter and $400 \mu m$ long. Surface area of the cell is 0.0628 mm\textsuperscript{2}\cite{liu_model_1998}.
+
+Reversal potentials of Ca\textsuperscript{2+} current types are dependent on voltage and calcium, and are dynamically updated by the Nernst equation\cite{liu_model_1998}:
+
+\begin{equation}
+    E_{Ca} = \frac{RT}{zF} ln(\frac{[Ca^{2+}]_{ext}}{[Ca^{2+}]_{in}}
+\end{equation}
+
+where $E_{Ca}$ refers to reversal potentials for \ac{ICaS} and \ac{ICaT}, gas constant $R = 8.314 J*mol/K$, temperature $T = 284.15 K$, ion charge $z = 2$ for calcium ions, Faraday constant $F = 96485 C/mol$, $[Ca^{2+}]_{in}$ is the current intracellular calcium concentration, and the extracellular calcium concentration $[Ca^{2+}]_{ext} = 0.05 \mu M$\cite{prinz_alternative_2003}.
+
+Voltage-dependent equations for the model parameters for each current were adapted from \cite{prinz_alternative_2003}. Each ionic current has its own specific $p$, steady-state activation variable $m_\infty$, steady-state inactivation variable $h_\infty$, and time constants $\tau_m$ and $\tau_h$, respectively. Ionic currents which are not inactivating do not have values for $h_\infty$ or $\tau_h$.
+
+Maximal conductances are dependent on Ca\textsuperscript{2+} concentration and are regulated by Equations \ref{eq:integralregulation} and \ref{eq:integralregulation2}. The time constant for transcriptional rate $\tau_{m_i}$ is unique for each maximal conductance and defined by:
+
+\begin{equation}
+    \tau_{m_i} = \frac{5e6}{g_{\infty_i}}
+\end{equation}
+
+where $tau_m$ is in milliseconds and $g_{i\infty}$ represents the steady-state maximal conductance for each ionic channel. Steady-state maximal conductances were originally adapted from Prinz \textit{et al.}\cite{prinz_alternative_2003}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ccccccccc}
+        \textsc{Ion channel} & NaV & CaT & CaS & A & H & KCa & Kd & Leak \\
+        \hline
+    $g_\infty$ $(\mu S/mm^2)$ & $1e3$ & $25$ & $60$ & $5e2$ & $0.1$ & $50$ & $1e3$ & $*$ \\
+        \hline
+        $\tau_m$ $(ms)$ & $5e3$ & $2e5$ & $\approx 8.33e4$ & $1e4$ & $5e7$ & $1e5$ & $5e3$ & $*$ \\
+        \hline
+        $\tau_g$ $(ms)$ & $5e3$ & $5e3$ & $5e3$ & $5e3$ & $5e3$ & $5e3$ & $5e3$ & $*$
+    \end{tabular}
+    \caption[Integral control model parameters]{Default integral control model parameters. $g_\infty$ adapted from Prinz \textit{et al.} to determine transcriptional rate time constants $\tau_m$ for each ionic current\cite{prinz_alternative_2003}. Translation rate time constant $\tau_g$ is equal across all ionic currents. *Leak is unregulated in this model and thus does not have $\tau_m$ or $\tau_g$ time constants.}
+    \label{tab:integralparameters}
+\end{table}
+
+Table \ref{tab:integralparameters} describes the regulation time constants used in both Equations \ref{eq:integralregulation} and \ref{eq:integralregulation2}. Steady state maximal conductances ($g_\infty$) were computed by simulating a known working set of eight channel maximal conductances adapted from Prinz. \textit{et al.} for $t = 400s$ with a time-step of $dt = 0.1ms$ to ensure all maximal conductances converged at their respective steady state densities\cite{prinz_alternative_2003}. These values are only used to compute the transcription and translation rate time constants, and are not used at any point after these values are calculated. It should be of note that these time constants are the default for all experiments, except in cases where the time constants are being varied themselves. In that case, these default values are used as a median point upon which to build a distribution. Target Ca\textsuperscript{2+} concentration was established for a bursting neuron through this same method. Average Ca\textsuperscript{2+} concentration, averaged over 200ms, was obtained from the model after simulation. Initialization of Ca\textsuperscript{2+} target concentration and regulation time constants was repeated at the beginning of each experiment. 
+
+\section{Simulating Neurons}
+
+Model neurons are simulated according to the exponential Euler method,\cite{gorur-shandilya_xolotl_2018,dayan2001theoretical} which approximates \ac{Vm} at each discrete time step by the equation:
+
+\begin{equation} \label{eq:expeuler}
+V(t + \mathrm{d}t) = V_\infty + (V(t) - V_\infty)exp(-\frac{\mathrm{d}t}{\tau_V})
+\end{equation}
+
+Neurons are simulated for $t = 200s$ with a timestep of $dt = 0.1ms$. Voltage traces used for figures and metrics are computed by simulating model neurons for $t = 6s$ with a timestep of $dt = 0.1ms$.
+
+The homeostatic mechanism is simulated by the Euler method\cite{gorur-shandilya_xolotl_2018}:
+
+\begin{align} \label{eq:integraleuler}
+    Ca_{err} &= Ca_{tgt} - Ca_{prev} \\
+    m_i(t+\mathrm{d}t) &= m_i + \frac{\mathrm{d}t}{\tau_{m_i}}Ca_{err} \\
+    \bar{g}_i(t+\mathrm{d}t) &= \bar{g}_i + \frac{\mathrm{d}t}{\tau_{g_i}}(m_i - \bar{g}A)
+\end{align}
+
+where $m_i$ represents ion channel mRNA concentration for each current, $\bar{g}_i$ represents maximal conductance density for each current, $Ca_{tgt}$ represents target average Ca\textsuperscript{2+} concentration, $Ca_{prev}$ represents Ca\textsuperscript{2+} concentration at the previous time-step, and $A$ represents the surface area of the model neuron.
+
+\section{Initial Conditions} \label{initialconditions}
+
+Model compartments are initialized with parameters $\ac{Vm} = -60 mV$ and $[Ca^{2+}_{in}] = 0.05 \mu M$.
+Initial maximal conductances ($\mu S/mm^2$) for each channel (excluding \ac{gleak}) and compartment mRNA concentration ($\mu M$) are varied across all experiments. \ac{gleak} is held fixed at $\bar{g}_{leak} = 0.05$, except in Figure \ref{fig:integralvariation_Leak}.
+Values are generated for all simulations at the beginning of each experiment by the use of a random number generator scaled by a noise factor.
+For the first experiment, where initial conditions are varied alone, the noise factor is $20$ for channel maximal conductances and $0.004$ for compartment mRNA concentration. For all other experiments, the noise factor is $5$ for channel maximal conductances and $0.001$ for mRNA levels.
+
+\section{Activity Metrics} \label{electrophys}
+
+For each simulation, metrics were computed on model parameters to determine if models were working or not. Models were considered to have converged if
+
+\begin{equation}
+    \mid \frac{([Ca_{tgt}] - [Ca_{avg}])}{[Ca_{tgt}]} \mid > 0.1
+\end{equation}
+
+where $Ca_{tgt}$ is the target Ca\textsuperscript{2+} concentration and $Ca_{avg}$ is the average Ca\textsuperscript{2+} concentration after homeostatic regulation.
+
+Models were then checked against reference model with parameters described in Table \ref{tab:integralparameters}. Burst periods and duty cycle were checked against reference model. If the burst period of the tested model deviated from reference by more than 20\% or the duty cycle deviated from reference more than 10\%, the model was considered nonfunctional.
+
+\section{Model Implementation} \label{implementation}
+
+Model neurons were implemented using \texttt{xolotl} v.20.4.22 and v.20.2.26, an open-source neuron simulator written in C++ for MATLAB\cite{gorur-shandilya_xolotl_2018}. Credit to Srinivas Gorur-Shandilya for development and implementation of the modeling platform. Simulation data was retrieved through the use of MATLAB ver. R2020a.
+
+
+
+
