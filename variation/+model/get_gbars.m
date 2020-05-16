@@ -1,4 +1,4 @@
-function [g0,gbars,g_proper,g_other] = get_gbars(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,numSim,Ca_target)
+function [g0,gbars,g_proper,g_other] = get_gbars(x,exp,g0,mRNA_controller,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,numSim,Ca_target)
   %GET_GBARS This function runs numSim simulations and returns gbars for all of them
 
   % data storage
@@ -12,11 +12,6 @@ function [g0,gbars,g_proper,g_other] = get_gbars(x,exp,g0,mRNA_controller,mRNA,L
     x.set('t_end',T_grow);
     x.set('*gbar',g0(:,i));
     x.set('*Controller.m',mRNA_controller(:,i));
-    for c = 1:length(channels)
-      if(~ismember(channels{c},leak_cell))
-        x.set(strcat('AB.',string(channels{c}),'.m'),mRNA(c,i));
-      end
-    end
 
     switch exp
     case 'tau_m'
@@ -54,4 +49,6 @@ function [g0,gbars,g_proper,g_other] = get_gbars(x,exp,g0,mRNA_controller,mRNA,L
 
   [g_proper,g_other] = filter.filter_gbars(gbars,metrics_V,metrics0,Ca_avg,Ca_tgt,numSim);
 
-  save(strcat('g0s',exp),'g0')
+  save(strcat('gbars',exp),'gbars');
+  save(strcat('g_proper',exp),'g_proper');
+  %save(strcat('g_other',exp,'g_other'));

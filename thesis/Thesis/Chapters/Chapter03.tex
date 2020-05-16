@@ -1,0 +1,148 @@
+%************************************************
+\chapter{Results}\label{ch:results}
+%************************************************
+
+How do homeostatic tuning rules produce variability and correlations between ion channel conductances and mRNA levels in neurons? To answer this question, we will vary intrinsic properties of a model neuron and properties of a homeostatic tuning rule to ascertain the influence of these parameters on the emergence of correlations between ion channels in neurons.
+We began with a conductance-based model neuron based on the Hogkin-Huxley formalism that was modified to take advantage of a homeostatic compensatory mechanism. Model neurons utilize intracellular Ca\textsuperscript{2+} concentration as a sensor to regulate conductance values of individual ion channels. These neurons are thus indirectly dependent on \ac{Vm} via the dependence of Ca\textsuperscript{2+} dynamics on \ac{Vm}\cite{oleary_correlations_2013,liu_model_1998}.
+This model produces and maintains complex activity patterns, such as tonic firing and bursting behavior, through the interplay between target Ca\textsuperscript{2+} concentration, Ca\textsuperscript{2+} dynamics, and voltage-dependent ion channels.
+
+We will utilize an integral control model, based off of the mechanism proposed by O'Leary \textit{et al.} which utilizes a single Ca\textsuperscript{2+} sensor to regulate channel mRNA levels and maximal conductances based on firing rate activity.\cite{oleary_correlations_2013}.
+Rate of regulation of maximal conductance values by the homeostatic rule is based on experimental work suggesting that regulatory dynamics occur over hours or even days\cite{desai_homeostatic_2003,davis_homeostatic_2006,turrigiano_homeostatic_1999}.
+Of course, simulating the evolution of neurodynamics over a period of hours or even days is computationally inefficient, so both the time of integration and regulatory timescales have been scaled down to a more appropriate 200 seconds for each simulation.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\linewidth]{gfx/development.png}
+\caption[Development of an integral control model.]{An integral control scheme with one Ca\textsuperscript{2+} sensor can produce bursting behavior after homeostatic regulation. \textsc{(Top:)} Development of maximal conductances from initial conditions. \ac{gleak} is excluded as it is not regulated. (\textsc{Bottom, left:}) Quiescent behavior in model neuron prior to homeostatic regulation. (\textsc{Bottom, right:}) Bursting behavior of model neuron after t = 200 seconds. Integral control scheme adapted from \cite{oleary_correlations_2013}.}
+    \label{fig:integraldevelopment}
+\end{figure}
+
+Figure \ref{fig:integraldevelopment} shows the development of maximal conductances over time. Each individual line in the top section of the figure corresponds to the development of each ion channel maximal conductance. The bottom section shows the functional output of the model before and after homeostatic regulation. Quasi-random initial conditions were generated for initial maximal conductances and ion channel mRNA levels. The model was then allowed to develop in an unconstrained manner for a set period of time ($t = 200 s$).
+
+%% EXPAND THE FIGURE TO USE TONIC SPIKING TOO!!!
+We wanted to understand not only how neurons are capable of producing correlations between ion channels, but how variability in the scale and connection strengths of correlations was produced by homeostatic regulation.
+We assumed that variability in scale and connection strengths of ion channel correlations is not dependent on the intrinsic parameters of the neuron, but rather the parameters of the homeostatic tuning rule.
+To answers these questions, we will start by varying initial conditions (channel maximal conductances and mRNA levels) of the model neuron. Then, we will vary \acf{gleak}, as it is not regulated by the homeostatic tuning rule.
+Then, we will vary parameters in the homeostatic tuning rule, including Ca\textsuperscript{2+} target concentration, \acf{taug}, and \acf{taum}.
+Taking into account how variation in intrinsic model neuron parameters affects patterns of correlation, we will systematically examine how variation in these parameters changes the patterns of correlations between steady state channel maximal conductances to ascertain the influence of each parameter on the emergence of ion channel correlations in neurons.
+
+Before modulating the individual parameters of the model, we wanted to recapitulate that the model was capable of producing similar patterns of activity from significantly different sets of initial channel maximal conductances\cite{oleary_cell_2014}. We initialized two sets of 1000 model neurons each with initial maximal conductance values that differed by 100-fold between distributions. We set target Ca\textsuperscript{2+} concentration to be the reference value for a bursting neuron obtained from the database produced by Prinz \textit{et al.} and described in Section \ref{initialconditions}\cite{prinz_alternative_2003}. We then simulated unconstrained homeostatic regulation for each model neuron for $t = 200s$. We filtered out models where maximal conductances had not converged to steady state, or had bursting periods and duty cycles that differed significantly from the reference model, as further described in Section \ref{electrophys}. Figure \ref{fig:var_integral} shows the mean values of each ion channel maximal conductance before and after homeostatic regulation for both sets of model neurons. It is shown that despite a 100-fold difference in initial ion channel maximal conductances between sets, the same pattern of steady state maximal conductances emerges after homeostatic regulation in each set of model neurons.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.2]{gfx/varboth.png}
+\caption[Mean ion channel conductances of \ac{g0} and steady-state maximal conductance values in an integral control model.]{A characteristic set of mean steady state maximal conductances (orange) emerges from two significantly different sets of initial mean maximal conductances (blue).  Despite a 100-fold difference between the two distributions of initial maximal conductances, a strikingly similar set of steady-state maximal conductances is produced in both cases. Initial conditions were generated by a random number generator scaled by a factor of (\textsc{A:}) 1000 and (\textsc{B:}) 100. Note that \ac{gH} is present, but of significantly lower value than other maximal conductances.}\label{fig:var_integral}
+\end{figure}
+
+\section{Variability in Initial Conditions of Model Neurons}
+
+After establishing that the model could reproduce characteristic sets of channel maximal conductances for a target behavior, we wanted to explore the correlations between ion channels after homeostatic regulation. Figure \ref{fig:integralcorrelations} shows how pairwise correlations between ion channels emerge from homeostatic regulation utilizing the same integral control scheme described above. 1000 model neurons were initialized with quasi-random initial ion channel maximal conductances varying between [0,5]. After homeostatic regulation, all steady state maximal conductances converge to a single common plane, indicating that the solution set of all channel maximal conductances that produce target activity can be derived from further analysis of this plane.
+Furthermore, ion channel maximal conductances in this model are perfectly correlated when initial channel maximal conductances and channel mRNA concentrations are varied by a small degree. It was seen that despite maximal conductances between ion channels existing at different scales, regulated by their individual regulation time constants, an increase in one ion channel maximal conductance is matched by all others at an equal rate.
+
+\begin{figure}[H]
+    \centering
+    %\begin{addmargin}[-2.5cm]{-3cm}
+    \begin{minipage}{\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{gfx/olearycorrg0.png}
+    \end{minipage}
+%\end{addmargin}
+    %\begin{addmargin}[-2.5cm]{-3cm}
+    \begin{minipage}{\textwidth}
+    \centering
+    \includegraphics[scale=0.5]{gfx/olearycorrmax.png}
+    \end{minipage}
+    %\end{addmargin}
+    
+\caption[Correlations between ion channels after homeostatic regulation.]{Pairwise correlations between ion channel maximal conductances ($\mu S/mm^2$) emerge from a homeostatic regulatory mechanism with one Ca\textsuperscript{2+} sensor. Range of variation for each maximal conductance is less than what has been established in experimental observations\cite{golowasch_activity-dependent_1999}. Sets of initial maximal conductances between [0,5] and compartment mRNA concentration between [0,0.001] are not sufficient to reproduce experimentally observed variation in maximal conductances. This small variation in initial conditions reproduces the linear pairwise correlations between steady state maximal conductances seen in \cite{oleary_cell_2014}. Each data point represents ion channel maximal conductances from one simulation. (\textsc{A:}) Pairwise correlations in initial maximal conductances between ion channels. (\textsc{B:}) Pairwise correlations in steady-state maximal conductances between ion channels.}
+    \label{fig:integralcorrelations}
+\end{figure}
+ 
+This result was expected. However, in experimental observations of correlations between channel mRNA concentrations, pairwise correlations between mRNA levels vary several-fold, and have diverse connection strengths which do not result in perfectly correlated steady state maximal conductances. Pairwise correlations between channel mRNAs do not, in all cases, vary at the same rate as each other, and some channels are not correlated at all\cite{santin_membrane_2019}.
+
+
+\begin{figure}[H]
+	\centering
+	\begin{addmargin}[-2cm]{-3cm}
+	\includegraphics[scale=0.4]{gfx/fullfigmRNA.png}
+	\end{addmargin}
+\caption[Variability in initial maximal conductances and mRNA levels under integral control.]{Variability in initial maximal conductances and channel mRNA concentration is not sufficient to reproduce experimentally observed variation in maximal conductances. Coefficient of variation (CV) for initial \ac{gA} is $0.58$, and for steady state \ac{gA} is $0.0030$. The homeostatic rule is shown here to compress variability in maximal conductances by a factor of 190 when initial maximal conductances and compartment mRNA levels are varied by a factor of 20 and 0.004, respectively. (\textsc{A:}) Voltage trace of model neuron prior to integration shows quiescent behavior. (\textsc{B:}) Voltage trace of model after integration shows bursting behavior. (\textsc{C:}) Pairwise correlations between \ac{gA} and \ac{gCaS} prior to integration. (\textsc{D:}) Pairwise correlations between \ac{gA} and \ac{gCaS} after integration. Linear fitting revealed \(R\textsuperscript{2} = 0.991\), indicating \ac{gA} and \ac{gCaS} are highly correlated. Histograms in both pairwise correlation plots show the distribution of maximal conductances for both \ac{gA} and \ac{gCaS}. (\textsc{E:}) Variability in initial compartment mRNA level concentration of \ac{gA} vs. variability in \ac{gA}. Variability in \ac{gA} increases with variability in \ac{gA} channel mRNA concentration at a rate significantly lower than \ac{gA} channel mRNA concentration  alone. (\textsc{F:}) Number of functional models vs. variability in \ac{gA} channel mRNA concentration.}
+\label{fig:integralvariation_g0}
+\end{figure}
+
+It was then hypothesized that the scale of variability in initial maximal conductances and mRNA levels could contribute to patterns of ion channel correlations. We increased the variability in initial maximal conductances by a factor of 100, and in mRNA levels by a factor of 50. 1000 model neurons were initialized to quasi-random initial maximal conductances ranging between [0,500] and initial channel mRNA concentrations ranging between [0,0.05].
+Figure \ref{fig:integralvariation_g0} shows the results of this experiment. It was found that a larger variation in initial conditions was not sufficient to reproduce the linear pairwise correlations between steady state channel maximal conductances, nor the variability in connection strengths observed experimentally. This indicated that initial conditions of the model neuron were not a significant influence on the emergence of ion channel correlations. Each model neuron underwent homeostatic regulation for $t = 200s$. As performed before, each model neuron was checked to ensure that the model converged to steady state maximal conductances, and had behavioral features which did not significantly differ from the reference bursting model neuron. The majority of model neurons produced target bursting behavior, showing that the integral control scheme is highly resistant to variation in these parameters. We can see that variability in maximal channel conductances increases with variability in channel mRNA concentration at a rate far lower than mRNA concentration alone. Most importantly, it was found that variability in these parameters resulted in compression of pairwise correlations between steady state maximal conductances from initial maximal conductances by a factor of 190, and that all versions of the model lie on a single point of the plane.
+%with a success rate of \textbf{\textbf{\textbf{\textbf{insert}}}}
+
+\section{Variability in Passive Ion Leak Conductance}
+
+We then moved on \acf{gleak}, which is unregulated in this model. It was hypothesized that though variability in regulated model parameters was insufficient to reproduce experimentally observed correlations, \ac{gleak} may have a significant influence because it is not regulated by the homeostatic rule.
+
+Given that initial maximal conductances and channel mRNA concentrations were insufficient to reproduce experimentally observed variability in steady state channel maximal conductances, these parameters were allowed to vary between [0,5] and [0,0.001], respectively. \ac{gleak} was varied between [0,0.2] across all model neurons. \ac{gleak} was bound at 0.2 as the number of functional models after homeostatic regulation decreased significantly past this point.
+
+\begin{figure}[H]
+    \centering
+    \begin{addmargin}[-2cm]{-3cm}
+    \includegraphics[scale=0.4]{gfx/fullfigLeak.png}
+    \end{addmargin}
+\caption[Variability in \ac{gleak} under integral control.]{Variability in \ac{gleak} reproduces linear pairwise correlation between \ac{gA} and \ac{gCaS}. However, variation in maximal conductances is less than two-fold. CV for initial \ac{gA} is $0.583$ and for steady state \ac{gA} is $0.00301$, resulting in a compression factor of 120 when varying \ac{gleak} between [0,0.2]. (\textsc{A-D:}) Same as Figure \ref{fig:integralvariation_g0}. Linear fitting revealed \(R\textsuperscript{2} = 1\), indicating \ac{gA} and \ac{gCaS} are perfectly correlated. (\textsc{E:}) Variability in \ac{gleak} vs. variability in \ac{gA}. Variability in \ac{gA} increases with variability in \ac{gleak} at a rate significantly lower than \ac{gleak} alone. (\textsc{F:}) Number of functional models vs. variability in \ac{gleak}.}
+    \label{fig:integralvariation_Leak}
+\end{figure}
+
+Figure \ref{fig:integralvariation_Leak} shows the results of the experiment. In stark contrast to a comparatively large variation in initial maximal conductances and channel mRNA levels, variation in \ac{gleak} was able to reproduce linear pairwise correlations between \ac{gA} and \ac{gCaS}. All solution sets of steady states maximal conductances in this experimental paradigm lie on a single plane taking the form of a line. However, despite greater than two-fold variability in \ac{gleak}, variation in steady state channel maximal conductances was less than two-fold, and was significantly compressed by the homeostatic rule with a compression factor of 120 between initial \ac{gA} and \ac{gA} after homeostatic regulation. Furthermore, variation in \ac{gA} increased at a rate significantly lower than \ac{gleak}, further cementing the compression in variability the homeostatic rule produced. It was determined that \ac{gleak} has a minor influence on the patterns of ion channel correlations that emerge from homeostatic regulation, but that variability in \ac{gleak} alone is not sufficient to reproduce the scale of variability in experimentally observed correlations, nor the variability in connection strengths between maximal conductances.
+
+\section{Variability in Target Ca\textsuperscript{2+} Concentration}
+
+We then examined the features of the homeostatic tuning rule itself. We started off by varying \ac{Ca_target}, positing that individual neurons may possess unique variability in target calcium concentration that can result in experimentally observed patterns of correlations while still producing target behavior. The experiment was set up in the same way as the previous experiment, with the same variation allowed in initial channel maximal conductances and mRNA concentrations. The distribution of \ac{Ca_target} values was produced by scaling the reference value obtained from the Prinz \textit{et al.} database described previously, and scaling it by a factor of 30. This scaling factor was produced by fine-tuning variation to ensure that a significant number of model neurons converged to bursting behavior after homeostatic regulation, but made sure that not all models converged so as to see the extreme ends of variation in this target.
+
+%CV LEFT = 0.56 CV RIGHT = 0.0464
+\begin{figure}[H]
+    \centering
+    \begin{addmargin}[-2cm]{-3cm}
+    \includegraphics[scale=0.4]{gfx/fullfigCa.png}
+    \end{addmargin}
+\caption[Variability in \acs{Ca_target} under integral control.]{Variability in \ac{Ca_target} reproduces linear pairwise correlation between \ac{gA} and \ac{gCaS}. Both \ac{gA} and \ac{gCaS} are shown to vary approximately two-fold, which is consistent with experimental evidence.\cite{golowasch_activity-dependent_1999} CV for initial \ac{gA} is $0.592$ and for steady state \ac{gA} is $0.15$, resulting in a compression factor of 4 when varying \ac{Ca_target} between [24,198]. (\textsc{A-D:}) Same as Figure \ref{fig:integralvariation_g0}. Linear fitting revealed \(R\textsuperscript{2} = 1\), indicating \ac{gA} and \ac{gCaS} are perfectly correlated. (\textsc{E:}) Variability in \ac{Ca_target} vs. variability in \ac{gA}. Variability in \ac{gA} increases with variability in \ac{Ca_target} at a rate near equal to \ac{Ca_target} alone. (\textsc{F:}) Number of functional models vs. variability in \ac{Ca_target}.}
+    \label{fig:integralvariation_Ca}
+\end{figure}
+
+After allowing model neurons to undergo homeostatic regulation, it was found that 30-fold variation in \ac{Ca_target} reproduced linear pairwise correlations with approximately two-fold variation in steady state channel maximal conductances. It appears, then, that variability in \ac{Ca_target} may play a significant role in reproducing experimentally observed correlations. However, variability in \ac{Ca_target} alone was not sufficient to reproduce the variability in connection strengths observed experimentally\cite{santin_membrane_2019}. Figure \ref{fig:integralvariation_Ca} shows the results of this experiment. It was found that increasing variability in \ac{Ca_target} produced scaling of \ac{gA} that was nearly at the same rate as \ac{Ca_target}. Along with that, variability in \ac{Ca_target} resulted in significantly lower compression of steady state channel maximal conductances -- a compression factor of only 4 was obtained by comparing the distribution of initial \ac{gA} to its steady state counterpart.
+
+It thus became apparent that variability in homeostatic tuning rules, but not the components of the ion channels themselves, can result in the emergence of experimentally observed variation in steady state channel maximal conductances.
+
+\section{Variability in Controller Translation Time Constant}
+
+To fully explore this, we performed two more experiments, varying regulation time constants for transcription and translation independently. It was proposed that varying the transcription time constant, but not the translation time constant, would have a significant influence on observed patterns of correlation. This was assumed because the rate of translation is dependent on the rate of transcription -- thus, the rate of transcription would determine the patterns of correlation. We began by initializing model neurons in the same manner as before, but varied \ac{taug} between 4,000 and 6,000ms, independently for each ion channel, across 1000 model neurons.
+
+\begin{figure}[H]
+    \centering
+    \begin{addmargin}[-2cm]{-3cm}
+    \includegraphics[scale=0.4]{gfx/fullfigtaug.png}
+    \end{addmargin}
+    \caption[Variability in \acs{taug} under integral control.]{Variability in \ac{taug} does not reproduce experimentally observed variation in maximal conductances. The pairwise correlation in steady state maximal conductances \ac{gA} and \ac{gCaS} exist as a single point on the plot. CV for initial \ac{gA} is $0.57$ and for steady state \ac{gA} is $0.0029$, resulting in a compression factor of 196 when varying \ac{taug} for each channel between -1000 to 1000 milliseconds of its initial value described in Section \ref{modelparameters}. (\textsc{A-D:}) Same as Figure \ref{fig:integralvariation_g0}. Linear fitting revealed \(R\textsuperscript{2} = 0.978\), indicating \ac{gA} and \ac{gCaS} are highly correlated. (\textsc{E:}) Variability in \ac{taug} vs. variability in \ac{gA}. Variability in \ac{gA} increases at a significantly lower rate than \ac{taug}, which is consistent with the observed compression in variability of steady state maximal conductances. (\textsc{F:}) Number of functional models vs. variability in \ac{taug}.}
+    \label{fig:integralvariation_taug}
+\end{figure}
+%CV LEFT = 0.592 CV RIGHT = 0.15 m= 0.12 1
+
+Figure \ref{fig:integralvariation_taug} details the results of this experiment. Unsurprisingly, variation in \ac{taug} was insufficient to reproduce the experimentally observed variation in steady state channel maximal conductances. It was found that the homeostatic tuning rule compressed variability in the steady state \ac{gA} distribution by a factor of 196 relative to the initial distribution. Variability in \ac{gA} increased at a rate far lower than \ac{taug}, and all correlations between steady state channel maximal conductances were reduced to a single point on the plane.
+
+This was an unsurprising result given that \ac{taug} is not an independent parameter. Rather, it depends on the feedback from the transcription step in the homeostatic tuning rule -- since the change in channel mRNA concentration determines the synthesis of ion channel proteins, \ac{taug} is thus determined to be dependent on the transcription rate constant, \ac{taum}.
+
+\section{Variability in Controller Transcription Time Constant}
+
+With this in mind, we decided to vary \ac{taum} independently of other parameters, and independently for each ion channel. As was the case in all experiments, 1000 model neurons were initialized to aforementioned initial channel maximal conductances and channel mRNA concentrations. The transcription rate constant for each channel \ac{taum} was allowed to vary between 1-1.5 times its initial value for each ion channel described in Section \ref{modelparameters}. An upper limit for the scaling of variation was determined by simulating variation in \ac{taum} until a reasonable number of functional models was produced after homeostatic regulation.
+
+\begin{figure}[H]
+    \centering
+    \begin{addmargin}[-2cm]{-3cm}
+    \includegraphics[scale=0.4]{gfx/fullfigtaum.png}
+    \end{addmargin}
+\caption[Variability in \acs{taum} under integral control.]{Variability in \ac{taum} reproduces pairwise correlation between \ac{gA} and \ac{gCaS}. Both \ac{gA} and \ac{gCaS} are shown to vary greater than two-fold, which indicates that variability in \ac{taum} can reproduce experimentally observed variation in maximal conductances.\cite{golowasch_activity-dependent_1999} CV for initial \ac{gA} is $0.585$ and for steady state \ac{gA} is $0.198$, resulting in a compression factor of 3 when varying \ac{taum} for each channel between 1-1.5 times its initial value described in Section \ref{modelparameters}. (\textsc{A-D:}) Same as Figure \ref{fig:integralvariation_g0}. Linear fitting revealed \(R\textsuperscript{2} = 0.670\), indicating \ac{gA} and \ac{gCaS} are significantly correlated, but less so than in previous experiments. (\textsc{E:}) Variability in \ac{taum} vs. variability in \ac{gA}. Variability in \ac{gA} increases with variability in \ac{taum} at a rate far greater than \ac{taum} alone. (\textsc{F:}) Number of functional models vs. variability in \ac{taum}.}
+    \label{fig:integralvariation_taum}
+\end{figure}
+
+The results from this experiment were strikingly different from variations in all other parameters. Figure \ref{fig:integralvariation_taum} shows that variation in \ac{taum} for each ion channel resulted in pairwise correlations between steady state maximal conductances. More importantly, steady state maximal conductances were found to exist in an expanded solution space. Rather than all solutions existing on a single line, as in experiments varying \ac{Ca_target} and \ac{gleak}, steady state maximal conductances were found to have a significantly larger spread. Variability in \ac{taum} was interpreted to be capable of reproducing pairwise correlations between ion channels that varied in the range of experimentally observed correlations, and was able to reproduce correlations that were not perfect, as has been seen in experimental observations\cite{santin_membrane_2019}. Linear fit of the pairwise correlation between the distribution of steady state \ac{gA} and \ac{gCaS} revealed $R^2 = 0.670$. In all other experiments, linear fit revealed that 99\%+ of the variation in one maximal conductance could be explained by another. Furthermore, the distribution of steady state maximal conductances was shown to be larger than two-fold for \ac{gA} and approximately two-fold for \ac{gCaS}, which is consistent with experimental observations where channel maximal conductances varied between two- to five-fold\cite{golowasch_activity-dependent_1999}. Variation in \ac{taum} was also shown to result in increased variability in \ac{gA} relative to \ac{taum}. In all other experiments, variation in steady state maximal conductances increased at a rate lower than the variability in the isolated parameter.
+
+It has been made clear through systematic examination of parameters for both the components of the model neuron, as well as the homeostatic tuning rule, that variation in parameters of the homeostatic tuning rule itself can result in emergence of experimentally observed variation in steady state channel maximal conductances. Both variation in \ac{Ca_target} and \ac{taum} revealed significant pairwise correlations between steady state channel maximal conductances. Variation in \ac{taum} revealed correlations between steady state channel maximal conductnaces that were not perfect, which is consistent with experimental observations\cite{santin_membrane_2019}.
+%CV LEFT = 0.585 CV RIGHT = 0.198% m = 0.056, r^2 = 0.679
+
+%CV LEFT = .566 CV RIGHT = 0.00289 m = 0.116 r = 0.978
