@@ -27,11 +27,17 @@ else
   Leak_gbar = 0.05;
 end
 if strcmp(exp,'g_0')
-  initial_condition_noise = 0.2;
-  reduce = 50;
+  initial_condition_noise = 10000;
+  mRNA_noise = 0.001;
+elseif strcmp(exp,'mRNA')
+  initial_condition_noise = 20;
+  mRNA_noise = initial_condition_noise/5e3;
+elseif strcmp(exp,'mRNAg0')
+  initial_condition_noise = 500;
+  mRNA_noise = initial_condition_noise/1e4;
 else
-  initial_condition_noise = 0.01;
-  reduce = 2.5;
+  initial_condition_noise = 5;
+  mRNA_noise = 0.001;
 end
 
 if strcmp(exp,'tau_m')
@@ -39,7 +45,7 @@ if strcmp(exp,'tau_m')
   if exist('var','var') == 1
     tau_ms = var;
   else
-    tau_ms = abs((repmat(tau_ms,1,numSim)*0.75)+((repmat(tau_ms,1,numSim)).*(rand(length(channels),numSim))));
+    tau_ms = abs(repmat(tau_ms,1,numSim)+(repmat(tau_ms,1,numSim).*(rand(length(channels),numSim)*0.5)));
     prompt = 'Do you want to save tau_m variation? Y/N [Y]: ';
     str = input(prompt,'s');
     if isempty(str)
@@ -89,22 +95,23 @@ else
 end
 
 % Initial condition variation
-mRNA_controller = (initial_condition_noise/reduce)*rand(length(x.get('*Controller.m')),numSim);
-save(strcat('mRNA_controller',exp),'mRNA_controller');
-mRNA = initial_condition_noise*rand(8,numSim);
-save(strcat('mRNA',exp),'mRNA');
+mRNA_controller = mRNA_noise*rand(length(x.get('*Controller.m')),numSim);
 g0 = initial_condition_noise.*rand(length(channels),numSim);
-save(strcat('g0',exp),'g0');
+
+if(type == 3)
+  save(strcat('mRNA_controller',exp),'mRNA_controller');
+  save(strcat('g0',exp),'g0');
+end
 
 switch type
 case 1 % trace before convergence
-  [V,time] = model.trace_before(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,Ca_target);
+  [V,time] = model.trace_before(x,exp,g0,mRNA_controller,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,Ca_target);
   g0 = NaN;
   gbars = NaN;
 case 2 % trace after convergence
-  [V,time] = model.trace_after(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,Ca_target);
+  [V,time] = model.trace_after(x,exp,g0,mRNA_controller,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,Ca_target);
   g0 = NaN;
   gbars = NaN;
 case 3 % fun with gbars
-  [V,time] = model.get_gbars(x,exp,g0,mRNA_controller,mRNA,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,numSim,Ca_target);
+  [V,time] = model.get_gbars(x,exp,g0,mRNA_controller,Leak_gbar,tau_ms,tau_gs,leak_cell,channels,T_grow,T_measure,metrics0,numSim,Ca_target);
 end
