@@ -1,4 +1,5 @@
-# Replicating the Diversity of Correlations between Ion Channels in Neurons
+# Variability in Homeostatic Tuning Rules Produces Diverse Correlations Between Ion Channels
+## An (undergraduate) Senior Thesis
 ---
 `NEUR 99B: Senior Thesis`   
 `Brandeis University, Fall 2019 - Spring 2020`
